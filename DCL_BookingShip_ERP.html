@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DCL BookingShip ERP</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#1E2D4A;--mid:#3A5080;--slate:#4D6494;--light:#7A8CB0;
+  --pale:#C8D3E8;--bg:#F2F5FA;--white:#fff;--gold:#E8B84B;
+  --green:#38a169;--red:#e53e3e;--sidebar-w:230px;--topbar-h:56px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:#2d3748;font-size:14px;overflow-x:hidden}
+
+/* ─── LANGUAGE SWITCHER ─── */
+.lang-switch{display:flex;background:rgba(255,255,255,.1);border-radius:20px;padding:3px;gap:2px}
+.lang-switch.light{background:#f0f4fa}
+.lang-btn{padding:4px 11px;border-radius:16px;border:none;background:transparent;font-size:.7rem;font-weight:700;cursor:pointer;color:rgba(200,211,232,.6);transition:all .2s;letter-spacing:.04em;display:flex;align-items:center;gap:4px}
+.lang-btn.active{background:rgba(255,255,255,.15);color:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.lang-switch.light .lang-btn{color:#8898aa}
+.lang-switch.light .lang-btn.active{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.lang-flag{font-size:.85rem;line-height:1}
+
+/* ─── PAGE SWITCH ─── */
+.page{display:none}.page.active{display:flex}
+#page-dashboard{flex-direction:row}
+
+/* ══════════════════════════════════════
+   LOGIN PAGE
+══════════════════════════════════════ */
+#page-login{min-height:100vh;overflow:hidden}
+.left-panel{flex:1.1;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:3rem;overflow:hidden;background:var(--navy)}
+.sea-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(74,96,148,.18)1px,transparent 1px),linear-gradient(90deg,rgba(74,96,148,.18)1px,transparent 1px);background-size:48px 48px;animation:gridScroll 18s linear infinite}
+@keyframes gridScroll{0%{background-position:0 0}100%{background-position:48px 48px}}
+.orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.28}
+.orb-1{width:420px;height:420px;background:var(--slate);top:-120px;left:-80px;animation:float 9s ease-in-out infinite}
+.orb-2{width:300px;height:300px;background:var(--mid);bottom:-60px;right:60px;animation:float 12s ease-in-out infinite reverse}
+.orb-3{width:200px;height:200px;background:var(--gold);top:40%;left:55%;opacity:.12;animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-24px) scale(1.04)}}
+.ship-scene{position:absolute;bottom:120px;left:0;right:0;display:flex;justify-content:center;opacity:.9}
+.left-content{position:relative;z-index:2}
+.left-top-bar{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem}
+.brand-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 14px;font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--pale);text-transform:uppercase}
+.brand-tag span{width:6px;height:6px;border-radius:50%;background:var(--gold);display:block;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-title{font-family:'Barlow Condensed',sans-serif;font-size:3.2rem;font-weight:700;line-height:1.05;color:#fff;margin-top:0}
+.hero-title em{color:var(--gold);font-style:normal}
+.hero-sub{color:var(--pale);font-size:.95rem;font-weight:300;margin-top:.8rem;line-height:1.7;max-width:340px}
+.stats-row{display:flex;gap:2rem;margin-top:2.5rem}
+.stat-num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;color:#fff;line-height:1}
+.stat-num small{font-size:1.1rem;color:var(--gold)}
+.stat-label{font-size:.72rem;color:var(--pale);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.features{position:relative;z-index:2;display:flex;flex-direction:column;gap:10px}
+.feat-pill{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:10px 14px;color:var(--pale);font-size:.82rem}
+.feat-icon{width:28px;height:28px;border-radius:6px;background:var(--mid);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.right-panel{width:440px;flex-shrink:0;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:3rem;position:relative}
+.right-panel-lang{position:absolute;top:20px;right:20px}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.logo-circles{position:relative;width:48px;height:48px;flex-shrink:0}
+.logo-circles .c{position:absolute;width:28px;height:28px;border-radius:50%;opacity:.85}
+.logo-circles .c1{background:var(--light);top:0;left:10px}
+.logo-circles .c2{background:var(--slate);top:14px;left:0}
+.logo-circles .c3{background:var(--navy);top:14px;left:20px}
+.logo-text .t1{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:700;color:var(--navy);letter-spacing:.04em;line-height:1}
+.logo-text .t2{font-size:.65rem;font-weight:600;letter-spacing:.2em;color:var(--light);text-transform:uppercase}
+.login-heading{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:700;color:var(--navy)}
+.login-sub{color:#8898aa;font-size:.85rem;margin-top:4px;margin-bottom:1.5rem}
+.form-label-login{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);margin-bottom:6px;display:block}
+.form-control-login{width:100%;border:1.5px solid #e0e7f0;border-radius:8px;padding:.65rem 1rem;font-size:.9rem;color:var(--navy);transition:border-color .2s,box-shadow .2s;outline:none}
+.form-control-login:focus{border-color:var(--slate);box-shadow:0 0 0 3px rgba(77,100,148,.12)}
+.input-wrap{position:relative}
+.input-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#b8c5d6}
+.btn-login-main{width:100%;padding:.75rem;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:600;letter-spacing:.04em;cursor:pointer;margin-top:.5rem;transition:background .2s}
+.btn-login-main:hover{background:var(--mid)}
+.divider-ln{display:flex;align-items:center;gap:12px;margin:1.2rem 0}
+.divider-ln hr{flex:1;border:none;border-top:1px solid #e8eef6}
+.divider-ln span{font-size:.75rem;color:#b8c5d6;white-space:nowrap}
+.role-badges{display:flex;gap:8px;flex-wrap:wrap}
+.rb{font-size:.72rem;padding:4px 12px;border-radius:20px;background:#f0f4fa;color:var(--slate);font-weight:600}
+.rb.admin{background:#fff0d4;color:#B8811A}
+.footer-note{margin-top:1.8rem;padding-top:1.2rem;border-top:1px solid #f0f4fa;display:flex;align-items:center;gap:8px}
+.badge-sys{font-size:.7rem;padding:3px 10px;border-radius:20px;border:1px solid var(--pale);color:var(--light);font-weight:600;letter-spacing:.08em}
+.alt-actions-ln{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.link-muted-ln{font-size:.82rem;color:var(--slate);text-decoration:none;font-weight:500}
+.link-muted-ln:hover{color:var(--navy)}
+.remember-wrap{display:flex;align-items:center;gap:8px}
+.remember-wrap label{font-size:.82rem;color:#8898aa;cursor:pointer}
+
+/* ══════════════════════════════════════
+   DASHBOARD PAGE
+══════════════════════════════════════ */
+#page-dashboard{min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:var(--navy);display:flex;flex-direction:column;z-index:100}
+.sidebar-brand{padding:16px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08);min-height:var(--topbar-h)}
+.logo-circles-sm{position:relative;width:36px;height:36px;flex-shrink:0}
+.logo-circles-sm .c{position:absolute;width:20px;height:20px;border-radius:50%;opacity:.9}
+.logo-circles-sm .c1{background:#7A8CB0;top:0;left:8px}
+.logo-circles-sm .c2{background:#4D6494;top:10px;left:0}
+.logo-circles-sm .c3{background:#1E2D4A;top:10px;left:16px;border:1.5px solid rgba(255,255,255,.2)}
+.brand-name{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:#fff;line-height:1.1}
+.brand-sub{font-size:.58rem;color:var(--pale);letter-spacing:.1em;text-transform:uppercase}
+.sidebar-section{padding:10px 12px 4px;font-size:.62rem;font-weight:700;color:rgba(200,211,232,.45);letter-spacing:.14em;text-transform:uppercase;margin-top:6px}
+.nav-item-wrap{padding:2px 8px}
+.nav-link-dcl{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:rgba(200,211,232,.7);text-decoration:none;font-size:.83rem;font-weight:500;transition:background .15s,color .15s;cursor:pointer}
+.nav-link-dcl:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-link-dcl.active{background:var(--mid);color:#fff}
+.nav-link-dcl .ico{width:16px;height:16px;flex-shrink:0;opacity:.8}
+.nav-badge{margin-left:auto;background:var(--gold);color:#7a4a00;font-size:.6rem;font-weight:700;padding:1px 7px;border-radius:20px}
+.nav-badge.red{background:var(--red);color:#fff}
+.sidebar-footer{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:.8rem;font-weight:600;color:#fff}
+.user-role{font-size:.65rem;color:var(--pale)}
+.topbar{position:fixed;left:var(--sidebar-w);right:0;top:0;height:var(--topbar-h);background:var(--white);border-bottom:1px solid #e8eef6;display:flex;align-items:center;padding:0 24px;gap:16px;z-index:99}
+.breadcrumb-dcl{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#8898aa}
+.breadcrumb-dcl .active{color:var(--navy);font-weight:600}
+.breadcrumb-sep{color:#d0d8e8}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-date{font-size:.78rem;color:#8898aa}
+.btn-icon{width:34px;height:34px;border-radius:8px;border:1px solid #e8eef6;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8898aa;position:relative}
+.btn-icon:hover{background:var(--bg)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid #fff}
+.main-content{margin-left:var(--sidebar-w);padding-top:var(--topbar-h);min-height:100vh;width:100%}
+.page-body{padding:20px 24px}
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:var(--white);border-radius:12px;padding:16px 18px;border:1px solid #e8eef6}
+.stat-card .label{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8898aa;margin-bottom:6px}
+.stat-card .value{font-family:'Barlow Condensed',sans-serif;font-size:1.9rem;font-weight:700;color:var(--navy);line-height:1}
+.stat-card .sub{font-size:.72rem;color:#8898aa;margin-top:4px}
+.trend{font-size:.72rem;font-weight:600;padding:2px 7px;border-radius:20px;display:inline-block}
+.trend-up{background:#e6f4ea;color:#256029}
+.trend-warn{background:#fff4e0;color:#7a4a00}
+.trend-info{background:#e6eefa;color:var(--navy)}
+.stat-accent{border-left:3px solid var(--slate)}
+.stat-gold{border-left:3px solid var(--gold)}
+.stat-green{border-left:3px solid var(--green)}
+.stat-red{border-left:3px solid var(--red)}
+.stat-teal{border-left:3px solid #2b9e8a}
+.pipeline-bar{display:flex;gap:0;background:#fff;border:1px solid #e8eef6;border-radius:10px;overflow:hidden;margin-bottom:16px}
+.pipe-step{flex:1;padding:10px 12px;text-align:center;border-right:1px solid #e8eef6;cursor:pointer;transition:background .15s;user-select:none}
+.pipe-step:last-child{border-right:none}
+.pipe-step:hover{background:#f7f9fc}
+.pipe-step.active{background:var(--navy)}
+.pipe-step .ps-label{font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#8898aa}
+.pipe-step.active .ps-label{color:rgba(200,211,232,.8)}
+.pipe-step .ps-count{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;color:var(--navy);line-height:1.1}
+.pipe-step.active .ps-count{color:#fff}
+.layout-split{display:flex;gap:16px}
+.table-section{flex:1;min-width:0}
+.table-card{background:#fff;border-radius:12px;border:1px solid #e8eef6;overflow:hidden}
+.table-wrapper{overflow-x:auto}
+table.dcl-table{width:100%;border-collapse:collapse;font-size:.8rem;min-width:1200px}
+table.dcl-table thead th{background:#f7f9fc;padding:10px 12px;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8898aa;border-bottom:1px solid #e8eef6;white-space:nowrap}
+table.dcl-table tbody tr{border-bottom:1px solid #f0f4fa;transition:background .1s;cursor:pointer}
+table.dcl-table tbody tr:hover{background:#f7f9ff}
+table.dcl-table tbody tr.selected{background:#eef2ff!important}
+table.dcl-table td{padding:9px 12px;vertical-align:middle;color:#374151;white-space:nowrap}
+table.dcl-table td.mono{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:.03em}
+table.dcl-table tr.group-row td{background:#f0f4fa}
+table.dcl-table tr.group-row:hover td{background:#e8edf7}
+table.dcl-table tr.group-row.selected td{background:#dde6ff}
+.lo-badge{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;color:var(--navy)}
+table.dcl-table tr.sub-row td{background:#fafcff}
+table.dcl-table tr.sub-row:hover td{background:#f3f7ff}
+table.dcl-table tr.sub-row td:first-child{padding-left:28px;color:#aab}
+.badge-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:700;letter-spacing:.05em;white-space:nowrap}
+.badge-status .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.s-done{background:#e6f4ea;color:#256029}.s-done .dot{background:#38a169}
+.s-port{background:#e6eefa;color:var(--navy)}.s-port .dot{background:var(--slate)}
+.s-packing{background:#fff4e0;color:#7a4a00}.s-packing .dot{background:var(--gold)}
+.s-plan{background:#f5f5f5;color:#666}.s-plan .dot{background:#aaa}
+.s-delay{background:#fff0f0;color:#c53030}.s-delay .dot{background:var(--red)}
+.nxe{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.67rem;font-weight:700}
+.nxe-ttk{background:#e6eefa;color:var(--navy)}
+.nxe-ll{background:#e6f4ea;color:#256029}
+.nxe-vtl{background:#fff4e0;color:#7a4a00}
+.nxe-pt{background:#fce8f3;color:#702459}
+.port{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.67rem;font-weight:700;background:#eef2ff;color:#3730a3}
+.tem-yes{color:#38a169;font-weight:700}
+.tem-no{color:#aaa}
+.action-btns{display:flex;gap:5px}
+.btn-xs{padding:3px 9px;border-radius:5px;border:1px solid #dde4f0;background:#fff;font-size:.68rem;font-weight:600;cursor:pointer;color:var(--slate)}
+.btn-xs:hover{background:var(--bg)}
+.btn-xs.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.table-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid #e8eef6;font-size:.78rem;color:#8898aa}
+.page-btns{display:flex;gap:4px}
+.page-btn{min-width:30px;height:30px;border-radius:6px;border:1px solid #e8eef6;background:#fff;font-size:.78rem;cursor:pointer;color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:600}
+.page-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.detail-panel{width:280px;flex-shrink:0;background:#fff;border-radius:12px;border:1px solid #e8eef6;padding:16px;position:sticky;top:calc(var(--topbar-h) + 20px);max-height:calc(100vh - var(--topbar-h) - 40px);overflow-y:auto}
+.detail-panel .dp-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #f0f4fa}
+.mini-stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f4fa;font-size:.78rem}
+.mini-stat .ms-label{color:#8898aa}
+.mini-stat .ms-val{font-weight:600;color:var(--navy);text-align:right;max-width:140px}
+.timeline-item{display:flex;gap:10px;margin-bottom:14px}
+.tl-line{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.tl-connector{width:2px;flex:1;background:#e8eef6;margin-top:3px}
+.tl-done .tl-dot{background:#38a169}
+.tl-port .tl-dot{background:var(--slate);box-shadow:0 0 0 3px rgba(77,100,148,.2)}
+.tl-next .tl-dot{background:#e8eef6;border:2px solid #cbd5e0}
+.tl-label{font-size:.78rem;font-weight:600;color:var(--navy)}
+.tl-date{font-size:.7rem;color:#8898aa;margin-top:1px}
+.table-scroll{max-height:480px;overflow-y:auto}
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.toolbar-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-right:6px}
+.search-box{display:flex;align-items:center;border:1px solid #dde4f0;border-radius:8px;background:#fff;padding:0 10px;gap:7px;width:220px}
+.search-box input{border:none;outline:none;font-size:.83rem;padding:7px 0;width:100%;background:transparent}
+.filter-select{border:1px solid #dde4f0;border-radius:8px;padding:7px 10px;font-size:.82rem;color:var(--navy);background:#fff;cursor:pointer;outline:none}
+.btn-primary-dcl{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s}
+.btn-primary-dcl:hover{background:var(--mid)}
+.btn-outline-dcl{background:#fff;color:var(--slate);border:1px solid #dde4f0;border-radius:8px;padding:7px 14px;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s}
+.btn-outline-dcl:hover{background:var(--bg)}
+.today-chip{background:#fff4e0;color:#7a4a00;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,24,36,.55);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:#fff;border-radius:16px;width:100%;max-width:860px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;padding:18px 24px;border-bottom:1px solid #e8eef6;gap:12px;flex-shrink:0}
+.modal-lo-badge{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--navy);background:#f0f4fa;padding:2px 14px;border-radius:8px}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy)}
+.modal-booking-num{font-size:.8rem;color:#8898aa;margin-top:2px}
+.modal-close{margin-left:auto;width:34px;height:34px;border-radius:8px;border:1px solid #e8eef6;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#8898aa;font-size:18px;line-height:1}
+.modal-close:hover{background:#f7f9fc;color:var(--navy)}
+.modal-tabs{display:flex;padding:0 24px;border-bottom:1px solid #e8eef6;background:#fafbfd;flex-shrink:0}
+.mtab{padding:12px 16px;font-size:.82rem;font-weight:600;color:#8898aa;cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap}
+.mtab:hover{color:var(--navy)}
+.mtab.active{color:var(--navy);border-bottom-color:var(--slate)}
+.modal-body{flex:1;overflow-y:auto;padding:24px}
+.modal-panel{display:none}
+.modal-panel.active{display:block}
+.form-section-title{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--pale)}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;margin-bottom:20px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 20px;margin-bottom:20px}
+.form-group label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#8898aa;margin-bottom:5px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;border:1.5px solid #e0e7f0;border-radius:8px;
+  padding:.5rem .8rem;font-size:.85rem;color:var(--navy);
+  background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;
+  font-family:'Barlow',sans-serif;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--slate);box-shadow:0 0 0 3px rgba(77,100,148,.1)}
+.form-group input[readonly]{background:#f7f9fc;color:#8898aa;cursor:default}
+.form-group textarea{resize:vertical;min-height:72px}
+.cont-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:10px;padding:12px;background:#f7f9fc;border-radius:8px;border:1px solid #e8eef6}
+.cont-row-header{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;margin-bottom:6px}
+.cont-row-header span{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8898aa}
+.btn-del-cont{width:28px;height:28px;border-radius:6px;border:1px solid #fcd5d5;background:#fff5f5;color:var(--red);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.btn-del-cont:hover{background:#fee2e2}
+.btn-add-cont{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1.5px dashed #c8d3e8;background:#f7f9fc;color:var(--slate);font-size:.8rem;font-weight:600;cursor:pointer;width:100%;justify-content:center;margin-top:4px}
+.btn-add-cont:hover{background:#eef2ff;border-color:var(--slate)}
+.tl-modal{display:flex;gap:0;margin-bottom:20px}
+.tl-step{flex:1;text-align:center;position:relative}
+.tl-step::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:2px;background:#e8eef6;z-index:0}
+.tl-step:last-child::after{display:none}
+.tl-step .tls-dot{width:24px;height:24px;border-radius:50%;border:2px solid #e8eef6;background:#fff;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;position:relative;z-index:1}
+.tl-step.done .tls-dot{background:#38a169;border-color:#38a169;color:#fff}
+.tl-step.current .tls-dot{background:var(--slate);border-color:var(--slate);color:#fff;box-shadow:0 0 0 4px rgba(77,100,148,.2)}
+.tl-step.pending .tls-dot{background:#f7f9fc;border-color:#e8eef6;color:#aaa}
+.tl-step .tls-label{font-size:.68rem;font-weight:600;color:#8898aa}
+.tl-step.done .tls-label{color:#38a169}
+.tl-step.current .tls-label{color:var(--navy)}
+.tl-step .tls-date{font-size:.63rem;color:#b0b9c8;margin-top:2px}
+.modal-footer{padding:16px 24px;border-top:1px solid #e8eef6;display:flex;align-items:center;gap:10px;flex-shrink:0;background:#fafbfd}
+.btn-save{background:var(--navy);color:#fff;border:none;border-radius:8px;padding:9px 24px;font-size:.88rem;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:var(--mid)}
+.btn-cancel{background:#fff;color:#8898aa;border:1px solid #dde4f0;border-radius:8px;padding:9px 20px;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn-cancel:hover{background:var(--bg)}
+.btn-delete{margin-left:auto;background:#fff5f5;color:var(--red);border:1px solid #fcd5d5;border-radius:8px;padding:9px 16px;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn-delete:hover{background:#fee2e2}
+.save-note{font-size:.75rem;color:#8898aa}
+
+/* ─── TOAST ─── */
+.toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 24px;border-radius:30px;font-size:.85rem;font-weight:600;opacity:0;transition:all .3s;z-index:2000;pointer-events:none;display:flex;align-items:center;gap:8px}
+.toast-msg.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN PAGE ══════════════ -->
+<div id="page-login" class="page active">
+  <div class="left-panel">
+    <div class="sea-grid"></div>
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    <div class="left-top-bar">
+      <div class="brand-tag"><span></span><span data-i18n="login.brand">DCL BookingShip ERP v2.0</span></div>
+      <div class="lang-switch" id="lang-switch-login">
+        <button class="lang-btn active" id="login-btn-vi" onclick="setLang('vi')"><span class="lang-flag">🇻🇳</span> VI</button>
+        <button class="lang-btn" id="login-btn-zh" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span> 中文</button>
+      </div>
+    </div>
+    <div class="left-content">
+      <h1 class="hero-title" data-i18n="login.hero">Quản lý xuất khẩu<br/><em>thông minh</em></h1>
+      <p class="hero-sub" data-i18n="login.sub">Hệ thống ERP chuyên biệt cho logistics — tích hợp CSKH, Điều độ, Booking, Bill và Hải quan trong một nền tảng duy nhất.</p>
+      <div class="stats-row">
+        <div><div class="stat-num">200<small>+</small></div><div class="stat-label" data-i18n="login.stat1">Lô hàng / tháng</div></div>
+        <div><div class="stat-num">4<small>+</small></div><div class="stat-label" data-i18n="login.stat2">Nhà xe đối tác</div></div>
+        <div><div class="stat-num">5<small>+</small></div><div class="stat-label" data-i18n="login.stat3">Cảng xuất khẩu</div></div>
+      </div>
+    </div>
+    <div class="ship-scene">
+      <svg width="380" height="140" viewBox="0 0 400 160" fill="none">
+        <path d="M0 120 Q50 108 100 120 Q150 132 200 120 Q250 108 300 120 Q350 132 400 120 L400 160 L0 160Z" fill="rgba(74,96,148,0.25)"/>
+        <path d="M0 132 Q60 122 120 132 Q180 142 240 132 Q300 122 360 132 Q390 137 400 132 L400 160 L0 160Z" fill="rgba(74,96,148,0.18)"/>
+        <rect x="60" y="88" width="280" height="36" rx="4" fill="#3A5080"/>
+        <path d="M60 120 L30 140 L370 140 L340 120Z" fill="#2B3A5C"/>
+        <rect x="160" y="52" width="100" height="40" rx="3" fill="#4D6494"/>
+        <rect x="172" y="58" width="18" height="14" rx="2" fill="rgba(200,211,232,0.4)"/>
+        <rect x="196" y="58" width="18" height="14" rx="2" fill="rgba(200,211,232,0.4)"/>
+        <rect x="220" y="58" width="18" height="14" rx="2" fill="rgba(200,211,232,0.4)"/>
+        <rect x="218" y="32" width="18" height="28" rx="3" fill="#3A5080"/>
+        <rect x="216" y="28" width="22" height="8" rx="2" fill="#2B3A5C"/>
+        <rect x="70" y="68" width="44" height="22" rx="2" fill="#E8B84B" opacity=".85"/>
+        <rect x="118" y="68" width="44" height="22" rx="2" fill="#4D6494"/>
+        <rect x="266" y="68" width="44" height="22" rx="2" fill="#4D6494"/>
+        <rect x="314" y="68" width="44" height="22" rx="2" fill="#E8B84B" opacity=".85"/>
+        <line x1="200" y1="14" x2="200" y2="52" stroke="#7A8CB0" stroke-width="2"/>
+        <line x1="200" y1="18" x2="160" y2="36" stroke="#7A8CB0" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="200" y1="18" x2="240" y2="36" stroke="#7A8CB0" stroke-width="1" stroke-dasharray="3,2"/>
+        <rect x="200" y="10" width="16" height="10" rx="1" fill="#E8B84B" opacity=".9"/>
+      </svg>
+    </div>
+    <div class="features">
+      <div class="feat-pill"><div class="feat-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="#C8D3E8" stroke-width="1.5"/><path d="M1 6h14" stroke="#C8D3E8" stroke-width="1.5"/></svg></div><span data-i18n="login.feat1">Theo dõi container real-time từ kho đến cảng</span></div>
+      <div class="feat-pill"><div class="feat-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#C8D3E8" stroke-width="1.5"/><path d="M8 5v4l2.5 1.5" stroke="#C8D3E8" stroke-width="1.5" stroke-linecap="round"/></svg></div><span data-i18n="login.feat2">Quản lý lịch tàu, booking, SI và Bill tập trung</span></div>
+      <div class="feat-pill"><div class="feat-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12L6 8l3 3 5-6" stroke="#C8D3E8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span data-i18n="login.feat3">Báo cáo CSKH và điều độ song ngữ Việt–Trung</span></div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="right-panel-lang">
+      <div class="lang-switch light" id="lang-switch-right">
+        <button class="lang-btn active" id="right-btn-vi" onclick="setLang('vi')"><span class="lang-flag">🇻🇳</span> VI</button>
+        <button class="lang-btn" id="right-btn-zh" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span> 中文</button>
+      </div>
+    </div>
+    <div class="login-logo">
+      <div class="logo-circles"><div class="c c1"></div><div class="c c2"></div><div class="c c3"></div></div>
+      <div class="logo-text"><div class="t1">DCL TRADING</div><div class="t2">BookingShip ERP</div></div>
+    </div>
+    <h2 class="login-heading" data-i18n="login.welcome">Chào mừng trở lại</h2>
+    <p class="login-sub" data-i18n="login.subtitle">Đăng nhập để tiếp tục quản lý hệ thống</p>
+    <div style="margin-bottom:1rem">
+      <label class="form-label-login" data-i18n="login.userLabel">Tên đăng nhập</label>
+      <div class="input-wrap">
+        <input class="form-control-login" id="inp-user" type="text" value="thanh.cskh" data-i18n-ph="login.userPh"/>
+        <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.5" r="2.5" stroke="#b8c5d6" stroke-width="1.4"/><path d="M2.5 13.5c0-2.485 2.462-4.5 5.5-4.5s5.5 2.015 5.5 4.5" stroke="#b8c5d6" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div style="margin-bottom:.5rem">
+      <label class="form-label-login" data-i18n="login.passLabel">Mật khẩu</label>
+      <div class="input-wrap">
+        <input class="form-control-login" type="password" value="12345678" data-i18n-ph="login.passPh"/>
+        <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="2" stroke="#b8c5d6" stroke-width="1.4"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="#b8c5d6" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="10.5" r="1" fill="#b8c5d6"/></svg>
+      </div>
+    </div>
+    <div class="alt-actions-ln">
+      <div class="remember-wrap"><input type="checkbox" id="rem" checked/><label for="rem" data-i18n="login.remember">Ghi nhớ đăng nhập</label></div>
+      <a href="#" class="link-muted-ln" data-i18n="login.forgot">Quên mật khẩu?</a>
+    </div>
+    <button class="btn-login-main" onclick="goToDashboard()" data-i18n="login.btn">Đăng nhập hệ thống →</button>
+    <div class="divider-ln"><hr/><span data-i18n="login.divider">Phân quyền theo bộ phận</span><hr/></div>
+    <div class="role-badges">
+      <span class="rb" data-i18n="role.cskh">CSKH</span>
+      <span class="rb" data-i18n="role.dieuđo">Điều độ</span>
+      <span class="rb" data-i18n="role.booking">Booking</span>
+      <span class="rb" data-i18n="role.bill">Bill</span>
+      <span class="rb" data-i18n="role.haiquan">Hải quan</span>
+      <span class="rb admin">Admin</span>
+    </div>
+    <div class="footer-note">
+      <span class="badge-sys">v2.0.0</span>
+      <span style="font-size:.75rem;color:#b8c5d6;" data-i18n="login.copyright">© 2025 DCL Trading — Hệ thống nội bộ</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD PAGE ══════════════ -->
+<div id="page-dashboard" class="page">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-circles-sm"><div class="c c1"></div><div class="c c2"></div><div class="c c3"></div></div>
+      <div><div class="brand-name">DCL TRADING</div><div class="brand-sub">BookingShip ERP</div></div>
+    </div>
+    <div class="sidebar-section" data-i18n="nav.sec.overview">Tổng quan</div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="nav.dashboard">Dashboard</span></a></div>
+    <div class="sidebar-section" data-i18n="nav.sec.ops">Nghiệp vụ</div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl active" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M1 6.5h14M5 10h6" stroke="currentColor" stroke-width="1.4"/></svg><span data-i18n="nav.cskh">CSKH + Điều Độ</span><span class="nav-badge">12</span></a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><rect x="1" y="5" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M11 8l3-2v5l-3-1.5" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="4" cy="13" r="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="9" cy="13" r="1.5" stroke="currentColor" stroke-width="1.3"/></svg><span data-i18n="nav.dieuXe">Điều Xe</span><span class="nav-badge red">3</span></a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="nav.booking">Booking</span></a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="nav.bill">Bill / SI</span></a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3l2 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span data-i18n="nav.haiquan">Hải Quan</span></a></div>
+    <div class="sidebar-section" data-i18n="nav.sec.carriers">Nhà xe</div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#">LINKLUCK</a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#">TTK (Tân Trường Khoa)</a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#">VT Lạnh Sài Gòn</a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#">PT Global</a></div>
+    <div class="sidebar-section" data-i18n="nav.sec.system">Hệ thống</div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><span data-i18n="nav.chiphi">Chi phí phát sinh</span></a></div>
+    <div class="nav-item-wrap"><a class="nav-link-dcl" href="#"><span data-i18n="nav.phanquyen">Phân quyền</span></a></div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">TH</div>
+      <div><div class="user-name">Thanh</div><div class="user-role" data-i18n="user.role">CSKH · Điều độ</div></div>
+      <svg style="margin-left:auto;color:rgba(200,211,232,.5);cursor:pointer" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M6 2l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </nav>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="breadcrumb-dcl"><span data-i18n="topbar.bc1">Nghiệp vụ</span><span class="breadcrumb-sep">/</span><span class="active" data-i18n="topbar.bc2">CSKH + Điều Độ</span></div>
+    <div class="topbar-right">
+      <span class="topbar-date" data-i18n="topbar.date">Thứ Sáu, 13/03/2026</span>
+      <!-- LANGUAGE SWITCHER IN TOPBAR -->
+      <div class="lang-switch light" id="lang-switch-dash">
+        <button class="lang-btn active" id="dash-btn-vi" onclick="setLang('vi')"><span class="lang-flag">🇻🇳</span> VI</button>
+        <button class="lang-btn" id="dash-btn-zh" onclick="setLang('zh')"><span class="lang-flag">🇨🇳</span> 中文</button>
+      </div>
+      <button class="btn-icon"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 1a5 5 0 00-5 5v3L1.5 11h13L13 9V6a5 5 0 00-5-5zM6 13a2 2 0 004 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span class="notif-dot"></span></button>
+      <div class="avatar-sm" style="background:var(--mid);font-size:.72rem;">TH</div>
+    </div>
+  </header>
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-body">
+      <!-- STATS -->
+      <div class="stat-grid">
+        <div class="stat-card stat-accent"><div class="label" data-i18n="stat1.label">Tổng lô tháng này</div><div class="value">48</div><div class="sub" data-i18n="stat1.sub">Lô hàng đang quản lý <span class="trend trend-up">+6 so tháng trước</span></div></div>
+        <div class="stat-card stat-green"><div class="label" data-i18n="stat2.label">Đã lên tàu</div><div class="value">31</div><div class="sub"><span class="trend trend-up">64.6%</span> <span data-i18n="stat2.sub">hoàn thành</span></div></div>
+        <div class="stat-card stat-gold"><div class="label" data-i18n="stat3.label">Đang vận chuyển</div><div class="value">12</div><div class="sub"><span data-i18n="stat3.sub">Cont đang trên đường</span> <span class="trend trend-warn" data-i18n="stat3.warn">3 sắp cutoff</span></div></div>
+        <div class="stat-card stat-red"><div class="label" data-i18n="stat4.label">Chờ xử lý</div><div class="value">5</div><div class="sub" data-i18n="stat4.sub">Cần xử lý trong hôm nay</div></div>
+        <div class="stat-card stat-teal"><div class="label" data-i18n="stat5.label">Doanh thu tháng</div><div class="value">2.1B</div><div class="sub" data-i18n="stat5.sub">VNĐ · 48 cont × ~43.7tr</div></div>
+      </div>
+      <!-- PIPELINE -->
+      <div class="pipeline-bar">
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe1">Nhận đơn</div><div class="ps-count">48</div></div>
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe2">Đã booking</div><div class="ps-count">44</div></div>
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe3">Cont đến kho</div><div class="ps-count">38</div></div>
+        <div class="pipe-step active" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe4">Đang vận chuyển</div><div class="ps-count">12</div></div>
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe5">Đã hạ cảng</div><div class="ps-count">31</div></div>
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe6">Đã lên tàu</div><div class="ps-count">31</div></div>
+        <div class="pipe-step" onclick="setPipe(this)"><div class="ps-label" data-i18n="pipe7">Thanh lý xong</div><div class="ps-count">28</div></div>
+      </div>
+      <!-- SPLIT LAYOUT -->
+      <div class="layout-split">
+        <div class="table-section">
+          <!-- TOOLBAR -->
+          <div class="toolbar">
+            <span class="toolbar-title" data-i18n="toolbar.title">Bảng CSKH + Điều Độ</span>
+            <div class="search-box"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#aaa" stroke-width="1.4"/><path d="M10.5 10.5L14 14" stroke="#aaa" stroke-width="1.4" stroke-linecap="round"/></svg><input id="search-inp" data-i18n-ph="toolbar.searchPh" placeholder="Tìm cont, booking, khách hàng..."/></div>
+            <select class="filter-select">
+              <option data-i18n="filter.allCustomers">Tất cả khách hàng</option>
+              <option>XING NONG</option><option>JIN FU JIE</option><option>Bình Phước</option><option>HENG XING</option>
+            </select>
+            <select class="filter-select">
+              <option data-i18n="filter.allCarriers">Tất cả nhà xe</option>
+              <option>TTK</option><option>LINKLUCK</option><option>VT Lạnh SG</option><option>PT Global</option>
+            </select>
+            <select class="filter-select">
+              <option data-i18n="filter.allStatus">Tất cả trạng thái</option>
+              <option data-i18n="s.done">Đã lên tàu</option>
+              <option data-i18n="s.port">Đã về cảng</option>
+              <option data-i18n="s.packing">Đang đóng hàng</option>
+              <option data-i18n="s.plan">Chờ kế hoạch</option>
+            </select>
+            <button class="btn-primary-dcl" style="margin-left:auto" onclick="openModal(null,'new')">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span data-i18n="toolbar.addNew">Thêm lô mới</span>
+            </button>
+          </div>
+          <!-- TABLE -->
+          <div class="table-card">
+            <div class="table-wrapper table-scroll">
+              <table class="dcl-table" id="main-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="th.lo">Lô #</th>
+                    <th data-i18n="th.booking">Số Booking</th>
+                    <th data-i18n="th.cont">Số Container</th>
+                    <th data-i18n="th.seal">Seal</th>
+                    <th data-i18n="th.khach">Khách hàng</th>
+                    <th data-i18n="th.cang">Cảng đến</th>
+                    <th data-i18n="th.nhaxe">Nhà xe</th>
+                    <th data-i18n="th.ngaygoi">Ngày gọi cont</th>
+                    <th>ETD</th>
+                    <th data-i18n="th.cutoff">Cut-off</th>
+                    <th data-i18n="th.hang">Hãng tàu</th>
+                    <th data-i18n="th.status">Trạng thái</th>
+                    <th data-i18n="th.tem">Tem</th>
+                    <th data-i18n="th.gia">Giá báo</th>
+                    <th data-i18n="th.action">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span data-i18n="table.footer">Hiển thị 12 / 138 lô hàng · Tháng 03/2026</span>
+              <div class="page-btns">
+                <button class="page-btn">‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- DETAIL SIDE PANEL -->
+        <div class="detail-panel" id="side-detail">
+          <div class="dp-title" id="side-lo-title">Chi tiết — Lô 218</div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.booking">Booking</span><span class="ms-val" id="sd-booking">A59GX07442</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.khach">Khách hàng</span><span class="ms-val" id="sd-khach">JIN FU JIE</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.hang">Hãng tàu</span><span class="ms-val" id="sd-hang">IAL</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.tau">Tên tàu</span><span class="ms-val" id="sd-tau" style="font-size:.72rem">WAN HAI 292 N063</span></div>
+          <div class="mini-stat"><span class="ms-label">ETD</span><span class="ms-val" id="sd-etd">14/03/2026</span></div>
+          <div class="mini-stat"><span class="ms-label">ETA</span><span class="ms-val" id="sd-eta">19/03/2026</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.nhaxe">Nhà xe</span><span class="ms-val" id="sd-nhaxe">VT Lạnh SG</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.gia">Giá báo</span><span class="ms-val" id="sd-gia" style="color:#256029">41–42tr VNĐ</span></div>
+          <div class="mini-stat"><span class="ms-label" data-i18n="dp.socont">Số cont</span><span class="ms-val" id="sd-socont">2 × 40HR</span></div>
+          <div style="margin-top:16px;margin-bottom:8px;font-size:.72rem;font-weight:700;color:#8898aa;text-transform:uppercase;letter-spacing:.08em" data-i18n="dp.progress">Tiến trình</div>
+          <div class="timeline-item tl-done"><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div><div class="tl-label" data-i18n="tl.nhandon">Nhận đơn hàng</div><div class="tl-date">09/03/2026</div></div></div>
+          <div class="timeline-item tl-done"><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div><div class="tl-label" data-i18n="tl.contkho">Cont đến kho</div><div class="tl-date">09/03/2026</div></div></div>
+          <div class="timeline-item tl-done"><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div><div class="tl-label" data-i18n="tl.kiemdich">Kiểm dịch xong</div><div class="tl-date">11/03/2026</div></div></div>
+          <div class="timeline-item tl-port"><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div><div class="tl-label" style="color:var(--slate)" data-i18n="tl.hacang">Đã hạ cảng Cát Lái</div><div class="tl-date" data-i18n="tl.today">13/03 — Hôm nay</div></div></div>
+          <div class="timeline-item tl-next"><div class="tl-line"><div class="tl-dot"></div><div class="tl-connector"></div></div><div><div class="tl-label" style="color:#aaa" data-i18n="tl.lentau">Lên tàu (ETD)</div><div class="tl-date">14/03/2026</div></div></div>
+          <div class="timeline-item tl-next"><div class="tl-line"><div class="tl-dot"></div></div><div><div class="tl-label" style="color:#aaa" data-i18n="tl.dencang">Đến cảng đích</div><div class="tl-date">19/03/2026</div></div></div>
+          <div style="margin-top:14px;background:#f7f9fc;border-radius:8px;padding:10px;font-size:.77rem;color:#555;border-left:3px solid var(--slate)"><strong style="color:var(--navy)">Note:</strong> <span id="sd-note">Sắp xếp trước 8h lên cont. Kiểm tra kỹ tem trước hạ cảng.</span></div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:7px">
+            <button class="btn-primary-dcl" style="justify-content:center" onclick="openModal(currentSelectedLo,'edit')"><span data-i18n="dp.editBtn">Chỉnh sửa lô này</span></button>
+            <button class="btn-outline-dcl" style="justify-content:center"><span data-i18n="dp.eport">Xem trên ePort</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ DETAIL MODAL ══════════════ -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-lo-badge" id="modal-lo-badge">Lô 218</div>
+      <div>
+        <div class="modal-title" id="modal-title" data-i18n="modal.title.edit">Chi tiết & Chỉnh sửa Booking</div>
+        <div class="modal-booking-num" id="modal-booking-num">Booking: A59GX07442</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <div class="mtab active" onclick="switchTab(this,'tab-general')" data-i18n="mtab1">Thông tin chung</div>
+      <div class="mtab" onclick="switchTab(this,'tab-containers')" data-i18n="mtab2">Containers</div>
+      <div class="mtab" onclick="switchTab(this,'tab-dieuđo')" data-i18n="mtab3">Điều độ</div>
+      <div class="mtab" onclick="switchTab(this,'tab-bill')" data-i18n="mtab4">Bill / SI</div>
+      <div class="mtab" onclick="switchTab(this,'tab-haiquan')" data-i18n="mtab5">Hải quan</div>
+    </div>
+    <div class="modal-body">
+
+      <!-- TAB 1: Thông tin chung -->
+      <div id="tab-general" class="modal-panel active">
+        <div class="tl-modal">
+          <div class="tl-step done"><div class="tls-dot">✓</div><div class="tls-label" data-i18n="tls1">Nhận đơn</div><div class="tls-date">09/03</div></div>
+          <div class="tl-step done"><div class="tls-dot">✓</div><div class="tls-label" data-i18n="tls2">Booking</div><div class="tls-date">09/03</div></div>
+          <div class="tl-step done"><div class="tls-dot">✓</div><div class="tls-label" data-i18n="tls3">Cont kho</div><div class="tls-date">09/03</div></div>
+          <div class="tl-step done"><div class="tls-dot">✓</div><div class="tls-label" data-i18n="tls4">Kiểm dịch</div><div class="tls-date">11/03</div></div>
+          <div class="tl-step current"><div class="tls-dot">→</div><div class="tls-label" data-i18n="tls5">Hạ cảng</div><div class="tls-date">13/03</div></div>
+          <div class="tl-step pending"><div class="tls-dot"></div><div class="tls-label" data-i18n="tls6">Lên tàu</div><div class="tls-date">14/03</div></div>
+          <div class="tl-step pending"><div class="tls-dot"></div><div class="tls-label" data-i18n="tls7">Thanh lý</div><div class="tls-date">—</div></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.donhang">Thông tin đơn hàng</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.malo">Mã lô nội bộ</label><input value="218" readonly/></div>
+          <div class="form-group"><label data-i18n="lbl.sobooking">Số Booking</label><input id="f-booking" value="A59GX07442"/></div>
+          <div class="form-group"><label data-i18n="lbl.trangthai">Trạng thái</label>
+            <select id="f-status">
+              <option data-i18n="s.plan">Chờ kế hoạch</option>
+              <option data-i18n="s.contkho">Cont đến kho</option>
+              <option data-i18n="s.packing">Đang đóng hàng</option>
+              <option selected data-i18n="s.port">Đã về cảng</option>
+              <option data-i18n="s.done">Đã lên tàu</option>
+              <option data-i18n="s.cleared">Đã thanh lý</option>
+              <option data-i18n="s.urgent">⚠ Cần xử lý gấp</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.khach">Khách hàng & Kho hàng</div>
+        <div class="form-grid-2">
+          <div class="form-group"><label data-i18n="lbl.khachvn">Tên khách hàng (VN)</label><input id="f-khach-vn" value="JIN FU JIE"/></div>
+          <div class="form-group"><label data-i18n="lbl.khachcn">Tên khách hàng (TQ) 客户名称</label><input id="f-khach-cn" value="金富杰"/></div>
+          <div class="form-group"><label data-i18n="lbl.diademhang">Địa điểm đóng hàng / Kho</label><input id="f-kho" value="JIN FU JIE KHO 1 — 金富杰 1厂"/></div>
+          <div class="form-group"><label data-i18n="lbl.lienhe">Liên hệ kho</label><input id="f-lienhe" value="0382723520 — anh Hải"/></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.lichhang">Lịch tàu & Cảng</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.pod">Cảng đến (POD)</label>
+            <select id="f-cang"><option>SHA — Thượng Hải</option><option selected>XIA — Hạ Môn</option><option>DAL — Đại Liên</option><option>TJN — Thiên Tân</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.hangtau">Hãng tàu</label>
+            <select id="f-hang"><option selected>IAL — WAN HAI</option><option>SJJ</option><option>CMA</option><option>YML</option><option>WHL</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.tentau">Tên tàu / Chuyến</label><input id="f-tau" value="WAN HAI 292 N063"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaygoi">Ngày gọi cont</label><input type="date" id="f-ngay-goi" value="2026-03-09"/></div>
+          <div class="form-group"><label data-i18n="lbl.etd">ETD dự kiến</label><input type="date" id="f-etd" value="2026-03-14"/></div>
+          <div class="form-group"><label data-i18n="lbl.eta">ETA dự kiến</label><input type="date" id="f-eta" value="2026-03-19"/></div>
+          <div class="form-group"><label data-i18n="lbl.cutoff">Cut-off time</label><input id="f-cutoff" value="13:00 ngày 13/03/2026 (Cát Lái)"/></div>
+          <div class="form-group"><label data-i18n="lbl.etdkho">ETD dự kiến kho</label><input type="date" id="f-etd-kho" value="2026-03-14"/></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.nhaxe">Nhà xe & Giá</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.nhaxe">Nhà xe vận chuyển</label>
+            <select id="f-nhaxe"><option>TTK — Tân Trường Khoa</option><option>LINKLUCK</option><option selected>VT Lạnh Sài Gòn</option><option>PT Global</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.gia">Giá báo (VNĐ)</label><input id="f-gia" value="41,000,000"/></div>
+          <div class="form-group"><label data-i18n="lbl.cskh">CSKH phụ trách</label>
+            <select id="f-cskh"><option selected>THANH</option><option>PHONG</option><option>AN</option></select>
+          </div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.ghichu">Ghi chú nội bộ</div>
+        <div class="form-group"><label data-i18n="lbl.note">Note / Ghi chú 备注</label><textarea id="f-note">Sắp xếp trước 8h lên cont. Cont FBIU5553687 có tem — kiểm tra kỹ trước hạ cảng.</textarea></div>
+        <div style="margin-top:10px" class="form-group"><label data-i18n="lbl.tem">Cần tem không? 是否需要贴标签</label>
+          <select id="f-tem">
+            <option data-i18n="tem.no">Không cần tem</option>
+            <option selected data-i18n="tem.yes">Có tem — cần kiểm tra</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TAB 2: Containers -->
+      <div id="tab-containers" class="modal-panel">
+        <div class="form-section-title" data-i18n="sec.contlist">Danh sách Container trong lô</div>
+        <div class="cont-row-header">
+          <span data-i18n="ch.cont">Số container</span><span data-i18n="ch.seal">Số seal</span><span data-i18n="ch.contstatus">Trạng thái cont</span><span></span>
+        </div>
+        <div id="cont-list">
+          <div class="cont-row">
+            <div class="form-group" style="margin:0"><input value="SZLU9596423"/></div>
+            <div class="form-group" style="margin:0"><input value="IAAH674738"/></div>
+            <div class="form-group" style="margin:0">
+              <select><option data-i18n="cs.empty">Chưa đầy</option><option selected data-i18n="cs.full">Đã đầy</option><option data-i18n="cs.packing">Đang đóng hàng</option><option data-i18n="cs.port">Đã hạ cảng</option><option data-i18n="cs.ship">Đã lên tàu</option></select>
+            </div>
+            <button class="btn-del-cont" onclick="delCont(this)">✕</button>
+          </div>
+          <div class="cont-row">
+            <div class="form-group" style="margin:0"><input value="FBIU5553687"/></div>
+            <div class="form-group" style="margin:0"><input value="IAAH688050"/></div>
+            <div class="form-group" style="margin:0">
+              <select><option data-i18n="cs.empty">Chưa đầy</option><option selected data-i18n="cs.full">Đã đầy</option><option data-i18n="cs.packing">Đang đóng hàng</option><option data-i18n="cs.port">Đã hạ cảng</option><option data-i18n="cs.ship">Đã lên tàu</option></select>
+            </div>
+            <button class="btn-del-cont" onclick="delCont(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn-add-cont" id="btn-add-cont" onclick="addCont()">＋ <span data-i18n="btn.addcont">Thêm container</span></button>
+        <div style="margin-top:20px" class="form-section-title" data-i18n="sec.eport">Thông tin khai báo ePort</div>
+        <div class="form-grid-2">
+          <div class="form-group"><label data-i18n="lbl.ngayeport">Ngày khai ePort</label><input type="date" value="2026-03-13"/></div>
+          <div class="form-group"><label data-i18n="lbl.eportstatus">Trạng thái ePort</label>
+            <select><option data-i18n="ep.pending">Chưa khai báo</option><option selected data-i18n="ep.done">Đã khai báo</option><option data-i18n="ep.cleared">Đã thanh lý</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.maha">Mã hạ (số lệnh hạ)</label><input value="CL2603130012"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaythanhlý">Ngày thanh lý</label><input type="date" value=""/></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: Điều độ -->
+      <div id="tab-dieuđo" class="modal-panel">
+        <div class="form-section-title" data-i18n="sec.kehoach">Kế hoạch điều độ</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.ngaybao">Ngày báo kế hoạch trucking</label><input type="date" value="2026-03-09"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaycont">Ngày cont đến kho</label><input type="date" value="2026-03-09"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngayday">Ngày đầy cont dự kiến</label><input type="date" value="2026-03-11"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngayvao">Ngày vào Hưng Thịnh</label><input type="date" value=""/></div>
+          <div class="form-group"><label data-i18n="lbl.ngayra">Ngày ra Hưng Thịnh</label><input type="date" value=""/></div>
+          <div class="form-group"><label data-i18n="lbl.ngayha">Ngày hạ cảng</label><input type="date" value="2026-03-13"/></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.chiphi">Chi phí điều độ</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.kehoach">Kế hoạch nhà xe</label>
+            <select><option data-i18n="kh.1">ĐỔI RỖNG 还重</option><option data-i18n="kh.2">CẮT MOOC MỚI 新车架</option><option data-i18n="kh.3">CUỐN MOOC 还车架</option><option data-i18n="kh.4">RÚT MOOC 还车架</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.luumooc">Lưu mooc (ngày)</label><input type="number" value="0" min="0"/></div>
+          <div class="form-group"><label data-i18n="lbl.phimooc">Phí lưu mooc (VNĐ)</label><input value="0"/></div>
+          <div class="form-group"><label data-i18n="lbl.cuonmooc">Chi phí cuốn mooc (VNĐ)</label><input value="0"/></div>
+          <div class="form-group"><label data-i18n="lbl.dieudc">Điều độ phụ trách</label><select><option selected>PHONG</option><option>AN</option><option>THANH</option></select></div>
+          <div class="form-group"><label data-i18n="lbl.det">DET (ngày free)</label><input type="number" value="14" min="0"/></div>
+        </div>
+        <div class="form-group"><label data-i18n="lbl.ghichudd">Ghi chú điều độ</label><textarea data-i18n-ph="ph.ghichudd" placeholder="Ghi chú về lịch trình, sự cố..."></textarea></div>
+      </div>
+
+      <!-- TAB 4: Bill / SI -->
+      <div id="tab-bill" class="modal-panel">
+        <div class="form-section-title" data-i18n="sec.shipper">Thông tin Shipper / Consignee</div>
+        <div class="form-grid-2">
+          <div class="form-group"><label data-i18n="lbl.shipper">Shipper</label><input value="DCL TRADING CO., LTD"/></div>
+          <div class="form-group"><label data-i18n="lbl.cnee">Consignee (CNEE)</label><input value="JIN FU JIE IMPORT CO."/></div>
+          <div class="form-group"><label data-i18n="lbl.notify">Notify Party</label><input value="SAME AS CONSIGNEE"/></div>
+          <div class="form-group"><label data-i18n="lbl.commodity">Mô tả hàng hóa (Commodity)</label><input value="FRESH BANANA +14C VENT 25CBM/H"/></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.billstatus">Trạng thái SI / Bill</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.deadlineSI">Deadline SI</label><input type="date" value="2026-03-12"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaysi">Ngày submit SI</label><input type="date" value="2026-03-11"/></div>
+          <div class="form-group"><label data-i18n="lbl.draftbl">Trạng thái Draft BL</label>
+            <select><option data-i18n="bl.pending">Chưa nhận Draft</option><option selected data-i18n="bl.draft">Đã nhận Draft BL</option><option data-i18n="bl.confirmed">Đã confirm Draft</option><option data-i18n="bl.released">Đã release BL</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.loaibill">Loại Bill</label>
+            <select><option selected>SWB (Sea Waybill)</option><option>TLX (Telex Release)</option><option>OBL (Original BL)</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.sobl">Số Bill (MBL/HBL)</label><input value="IALA59GX07442"/></div>
+          <div class="form-group"><label data-i18n="lbl.ptbill">Người phụ trách Bill</label><select><option selected>THANH</option><option>PHONG</option></select></div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.payment">Thanh toán</div>
+        <div class="form-grid-2">
+          <div class="form-group"><label data-i18n="lbl.cuoc">Cước biển (VNĐ)</label><input value="41,000,000"/></div>
+          <div class="form-group"><label data-i18n="lbl.local">Local Charges (VNĐ)</label><input value="0"/></div>
+          <div class="form-group"><label data-i18n="lbl.phiphatsinh">Phí phát sinh</label><input value="0" data-i18n-ph="ph.phiphatsinh" placeholder="Phí sửa bill, DEM/DET..."/></div>
+          <div class="form-group"><label data-i18n="lbl.ttoan">Trạng thái thanh toán</label>
+            <select><option data-i18n="pay.pending">Chưa thanh toán</option><option selected data-i18n="pay.done">Đã thanh toán</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label data-i18n="lbl.linkbill">Link file Bill (Google Drive)</label><input value="https://drive.google.com/drive/folders/1xh_P-i7q6..." data-i18n-ph="ph.linkbill" placeholder="Paste link Drive..."/></div>
+      </div>
+
+      <!-- TAB 5: Hải quan -->
+      <div id="tab-haiquan" class="modal-panel">
+        <div class="form-section-title" data-i18n="sec.kiemdich">Kiểm dịch thực vật (Phyto)</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.ngaylam">Ngày làm chứng từ KD</label><input type="date" value="2026-03-10"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaykd">Ngày kiểm dịch xong</label><input type="date" value="2026-03-11"/></div>
+          <div class="form-group"><label data-i18n="lbl.ttkd">Trạng thái Phyto</label>
+            <select><option data-i18n="kd.pending">Chờ kiểm dịch</option><option selected data-i18n="kd.pass">Đã KD — Đạt</option><option data-i18n="kd.fail">Không đạt — xử lý lại</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.sophyto">Số Giấy Phyto</label><input value="PHVN2026-031303"/></div>
+          <div class="form-group"><label data-i18n="lbl.soco">Số CO (C/O)</label><input value="CO-VN-2026-0318"/></div>
+          <div class="form-group"><label data-i18n="lbl.formco">Form CO</label>
+            <select><option selected data-i18n="co.forme">Form E (ASEAN–TQ)</option><option>Form D</option><option>Form AK</option></select>
+          </div>
+        </div>
+        <div class="form-section-title" data-i18n="sec.tokhaikhai">Tờ khai Hải quan</div>
+        <div class="form-grid-3">
+          <div class="form-group"><label data-i18n="lbl.sotk">Số tờ khai HQ</label><input value="10540612040"/></div>
+          <div class="form-group"><label data-i18n="lbl.ngaykb">Ngày khai báo</label><input type="date" value="2026-03-11"/></div>
+          <div class="form-group"><label data-i18n="lbl.phanluong">Phân luồng</label>
+            <select><option selected data-i18n="pl.green">Luồng xanh (Green)</option><option data-i18n="pl.yellow">Luồng vàng (Yellow)</option><option data-i18n="pl.red">Luồng đỏ (Red)</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.tttk">Trạng thái tờ khai</label>
+            <select><option data-i18n="tk.pending">Chờ truyền</option><option selected data-i18n="tk.cleared">Đã thông quan</option><option data-i18n="tk.checking">Đang kiểm tra</option></select>
+          </div>
+          <div class="form-group"><label data-i18n="lbl.linkhq">Link file Tờ khai / CO / Phyto</label><input value="https://docs.google.com/spreadsheets/..." data-i18n-ph="ph.linkhq" placeholder="Link Google Sheet..."/></div>
+          <div class="form-group"><label data-i18n="lbl.pthq">Người phụ trách HQ</label><select><option selected>THANH</option><option>PHONG</option></select></div>
+        </div>
+        <div class="form-group"><label data-i18n="lbl.ghichuhq">Ghi chú Hải quan</label><textarea data-i18n-ph="ph.ghichuhq" placeholder="Ghi chú về kiểm dịch, CO, tờ khai...">Khách xác nhận CO bản nháp OK. Gửi bản final CO + Phyto + TLX cho khách ngày 14/03.</textarea></div>
+      </div>
+
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <button class="btn-save" onclick="saveModal()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="display:inline;vertical-align:middle;margin-right:6px"><path d="M2 10v3h12v-3M8 2v8M5 7l3 3 3-3" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span data-i18n="btn.save">Lưu thay đổi</span>
+      </button>
+      <button class="btn-cancel" onclick="closeModal()" data-i18n="btn.cancel">Huỷ</button>
+      <span class="save-note" data-i18n="save.note">Thay đổi sẽ được cập nhật vào hệ thống</span>
+      <button class="btn-delete" data-i18n="btn.delete">🗑 Xoá lô</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-msg" id="toast"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <span data-i18n="toast.saved">Đã lưu thay đổi thành công!</span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// ══════════════════════════════════════
+//  I18N SYSTEM
+// ══════════════════════════════════════
+const i18n = {
+  vi: {
+    // Login left panel
+    'login.brand':'DCL BookingShip ERP v2.0',
+    'login.hero':'Quản lý xuất khẩu\n<em>thông minh</em>',
+    'login.sub':'Hệ thống ERP chuyên biệt cho logistics — tích hợp CSKH, Điều độ, Booking, Bill và Hải quan trong một nền tảng duy nhất.',
+    'login.stat1':'Lô hàng / tháng','login.stat2':'Nhà xe đối tác','login.stat3':'Cảng xuất khẩu',
+    'login.feat1':'Theo dõi container real-time từ kho đến cảng',
+    'login.feat2':'Quản lý lịch tàu, booking, SI và Bill tập trung',
+    'login.feat3':'Báo cáo CSKH và điều độ song ngữ Việt–Trung',
+    // Login right panel
+    'login.welcome':'Chào mừng trở lại',
+    'login.subtitle':'Đăng nhập để tiếp tục quản lý hệ thống',
+    'login.userLabel':'Tên đăng nhập','login.userPh':'Nhập username...',
+    'login.passLabel':'Mật khẩu','login.passPh':'Nhập mật khẩu...',
+    'login.remember':'Ghi nhớ đăng nhập','login.forgot':'Quên mật khẩu?',
+    'login.btn':'Đăng nhập hệ thống →',
+    'login.divider':'Phân quyền theo bộ phận',
+    'login.copyright':'© 2025 DCL Trading — Hệ thống nội bộ',
+    // Roles
+    'role.cskh':'CSKH','role.dieuđo':'Điều độ','role.booking':'Booking',
+    'role.bill':'Bill','role.haiquan':'Hải quan',
+    // Nav
+    'nav.sec.overview':'Tổng quan','nav.dashboard':'Dashboard',
+    'nav.sec.ops':'Nghiệp vụ',
+    'nav.cskh':'CSKH + Điều Độ','nav.dieuXe':'Điều Xe','nav.booking':'Booking',
+    'nav.bill':'Bill / SI','nav.haiquan':'Hải Quan',
+    'nav.sec.carriers':'Nhà xe','nav.sec.system':'Hệ thống',
+    'nav.chiphi':'Chi phí phát sinh','nav.phanquyen':'Phân quyền',
+    'user.role':'CSKH · Điều độ',
+    // Topbar
+    'topbar.bc1':'Nghiệp vụ','topbar.bc2':'CSKH + Điều Độ',
+    'topbar.date':'Thứ Sáu, 13/03/2026',
+    // Stats
+    'stat1.label':'Tổng lô tháng này','stat1.sub':'Lô hàng đang quản lý',
+    'stat2.label':'Đã lên tàu','stat2.sub':'hoàn thành',
+    'stat3.label':'Đang vận chuyển','stat3.sub':'Cont đang trên đường','stat3.warn':'3 sắp cutoff',
+    'stat4.label':'Chờ xử lý','stat4.sub':'Cần xử lý trong hôm nay',
+    'stat5.label':'Doanh thu tháng','stat5.sub':'VNĐ · 48 cont × ~43.7tr',
+    // Pipeline
+    'pipe1':'Nhận đơn','pipe2':'Đã booking','pipe3':'Cont đến kho',
+    'pipe4':'Đang vận chuyển','pipe5':'Đã hạ cảng','pipe6':'Đã lên tàu','pipe7':'Thanh lý xong',
+    // Toolbar
+    'toolbar.title':'Bảng CSKH + Điều Độ',
+    'toolbar.searchPh':'Tìm cont, booking, khách hàng...',
+    'filter.allCustomers':'Tất cả khách hàng','filter.allCarriers':'Tất cả nhà xe','filter.allStatus':'Tất cả trạng thái',
+    'toolbar.addNew':'Thêm lô mới',
+    // Table headers
+    'th.lo':'Lô #','th.booking':'Số Booking','th.cont':'Số Container','th.seal':'Seal',
+    'th.khach':'Khách hàng','th.cang':'Cảng đến','th.nhaxe':'Nhà xe',
+    'th.ngaygoi':'Ngày gọi cont','th.cutoff':'Cut-off',
+    'th.hang':'Hãng tàu','th.status':'Trạng thái','th.tem':'Tem','th.gia':'Giá báo','th.action':'Thao tác',
+    // Table footer
+    'table.footer':'Hiển thị 12 / 138 lô hàng · Tháng 03/2026',
+    // Status
+    's.done':'Đã lên tàu','s.port':'Đã về cảng','s.packing':'Đang đóng hàng',
+    's.plan':'Chờ kế hoạch','s.contkho':'Cont đến kho','s.cleared':'Đã thanh lý','s.urgent':'⚠ Cần xử lý gấp',
+    // Detail panel
+    'dp.booking':'Booking','dp.khach':'Khách hàng','dp.hang':'Hãng tàu','dp.tau':'Tên tàu',
+    'dp.nhaxe':'Nhà xe','dp.gia':'Giá báo','dp.socont':'Số cont',
+    'dp.progress':'Tiến trình',
+    'tl.nhandon':'Nhận đơn hàng','tl.contkho':'Cont đến kho','tl.kiemdich':'Kiểm dịch xong',
+    'tl.hacang':'Đã hạ cảng Cát Lái','tl.today':'13/03 — Hôm nay',
+    'tl.lentau':'Lên tàu (ETD)','tl.dencang':'Đến cảng đích',
+    'dp.editBtn':'Chỉnh sửa lô này','dp.eport':'Xem trên ePort',
+    // Modal tabs
+    'mtab1':'Thông tin chung','mtab2':'Containers','mtab3':'Điều độ','mtab4':'Bill / SI','mtab5':'Hải quan',
+    'modal.title.edit':'Chi tiết & Chỉnh sửa Booking','modal.title.new':'Thêm lô hàng mới',
+    // Timeline in modal
+    'tls1':'Nhận đơn','tls2':'Booking','tls3':'Cont kho','tls4':'Kiểm dịch','tls5':'Hạ cảng','tls6':'Lên tàu','tls7':'Thanh lý',
+    // Form sections
+    'sec.donhang':'Thông tin đơn hàng','sec.khach':'Khách hàng & Kho hàng',
+    'sec.lichhang':'Lịch tàu & Cảng','sec.nhaxe':'Nhà xe & Giá','sec.ghichu':'Ghi chú nội bộ',
+    // Form labels
+    'lbl.malo':'Mã lô nội bộ','lbl.sobooking':'Số Booking','lbl.trangthai':'Trạng thái',
+    'lbl.khachvn':'Tên khách hàng (VN)','lbl.khachcn':'Tên khách hàng (TQ) 客户名称',
+    'lbl.diademhang':'Địa điểm đóng hàng / Kho','lbl.lienhe':'Liên hệ kho',
+    'lbl.pod':'Cảng đến (POD)','lbl.hangtau':'Hãng tàu','lbl.tentau':'Tên tàu / Chuyến',
+    'lbl.ngaygoi':'Ngày gọi cont','lbl.etd':'ETD dự kiến (ngày tàu chạy)',
+    'lbl.eta':'ETA dự kiến (đến đích)','lbl.cutoff':'Cut-off time (cắt máng)','lbl.etdkho':'ETD dự kiến kho (khách)',
+    'lbl.nhaxe':'Nhà xe vận chuyển','lbl.gia':'Giá báo (VNĐ)','lbl.cskh':'CSKH phụ trách',
+    'lbl.note':'Note / Ghi chú 备注','lbl.tem':'Cần tem không? 是否需要贴标签',
+    // Containers
+    'sec.contlist':'Danh sách Container trong lô',
+    'ch.cont':'Số container','ch.seal':'Số seal','ch.contstatus':'Trạng thái cont',
+    'cs.empty':'Chưa đầy','cs.full':'Đã đầy','cs.packing':'Đang đóng hàng','cs.port':'Đã hạ cảng','cs.ship':'Đã lên tàu',
+    'sec.eport':'Thông tin khai báo ePort',
+    'lbl.ngayeport':'Ngày khai ePort','lbl.eportstatus':'Trạng thái ePort',
+    'lbl.maha':'Mã hạ (số lệnh hạ)','lbl.ngaythanhlý':'Ngày thanh lý',
+    'btn.addcont':'Thêm container',
+    'ep.pending':'Chưa khai báo','ep.done':'Đã khai báo','ep.cleared':'Đã thanh lý',
+    // Dieu do
+    'sec.kehoach':'Kế hoạch điều độ',
+    'lbl.ngaybao':'Ngày báo kế hoạch trucking','lbl.ngaycont':'Ngày cont đến kho',
+    'lbl.ngayday':'Ngày đầy cont dự kiến','lbl.ngayvao':'Ngày vào Hưng Thịnh',
+    'lbl.ngayra':'Ngày ra Hưng Thịnh','lbl.ngayha':'Ngày hạ cảng',
+    'sec.chiphi':'Chi phí điều độ',
+    'lbl.kehoach':'Kế hoạch nhà xe',
+    'kh.1':'ĐỔI RỖNG 还重','kh.2':'CẮT MOOC MỚI 新车架','kh.3':'CUỐN MOOC 还车架','kh.4':'RÚT MOOC 还车架',
+    'lbl.luumooc':'Lưu mooc (ngày)','lbl.phimooc':'Phí lưu mooc (VNĐ)',
+    'lbl.cuonmooc':'Chi phí cuốn mooc (VNĐ)','lbl.dieudc':'Điều độ phụ trách','lbl.det':'DET (ngày free)',
+    'lbl.ghichudd':'Ghi chú điều độ','ph.ghichudd':'Ghi chú về lịch trình, sự cố...',
+    // Bill
+    'sec.shipper':'Thông tin Shipper / Consignee',
+    'lbl.shipper':'Shipper','lbl.cnee':'Consignee (CNEE)','lbl.notify':'Notify Party',
+    'lbl.commodity':'Mô tả hàng hóa (Commodity)',
+    'sec.billstatus':'Trạng thái SI / Bill',
+    'lbl.deadlineSI':'Deadline SI (hãng tàu)','lbl.ngaysi':'Ngày submit SI',
+    'lbl.draftbl':'Trạng thái Draft BL','lbl.loaibill':'Loại Bill','lbl.sobl':'Số Bill (MBL/HBL)','lbl.ptbill':'Người phụ trách Bill',
+    'bl.pending':'Chưa nhận Draft','bl.draft':'Đã nhận Draft BL','bl.confirmed':'Đã confirm Draft','bl.released':'Đã release BL',
+    'sec.payment':'Thanh toán',
+    'lbl.cuoc':'Cước biển (Ocean Freight — VNĐ)','lbl.local':'Local Charges (VNĐ)',
+    'lbl.phiphatsinh':'Phí phát sinh','ph.phiphatsinh':'Phí sửa bill, DEM/DET...',
+    'lbl.ttoan':'Trạng thái thanh toán','lbl.linkbill':'Link file Bill (Google Drive)','ph.linkbill':'Paste link Drive...',
+    'pay.pending':'Chưa thanh toán','pay.done':'Đã thanh toán',
+    // Haiquan
+    'sec.kiemdich':'Kiểm dịch thực vật (Phyto)',
+    'lbl.ngaylam':'Ngày làm chứng từ KD','lbl.ngaykd':'Ngày kiểm dịch xong','lbl.ttkd':'Trạng thái Phyto',
+    'lbl.sophyto':'Số Giấy Phyto','lbl.soco':'Số CO (C/O)','lbl.formco':'Form CO',
+    'kd.pending':'Chờ kiểm dịch','kd.pass':'Đã KD — Đạt','kd.fail':'Không đạt — xử lý lại',
+    'co.forme':'Form E (ASEAN–TQ)',
+    'sec.tokhaikhai':'Tờ khai Hải quan',
+    'lbl.sotk':'Số tờ khai HQ','lbl.ngaykb':'Ngày khai báo','lbl.phanluong':'Phân luồng',
+    'lbl.tttk':'Trạng thái tờ khai','lbl.linkhq':'Link file Tờ khai / CO / Phyto','ph.linkhq':'Link Google Sheet...',
+    'lbl.pthq':'Người phụ trách HQ','lbl.ghichuhq':'Ghi chú Hải quan','ph.ghichuhq':'Ghi chú về kiểm dịch, CO, tờ khai...',
+    'pl.green':'Luồng xanh (Green)','pl.yellow':'Luồng vàng (Yellow)','pl.red':'Luồng đỏ (Red)',
+    'tk.pending':'Chờ truyền','tk.cleared':'Đã thông quan','tk.checking':'Đang kiểm tra',
+    // Footer / Buttons
+    'btn.save':'Lưu thay đổi','btn.cancel':'Huỷ','btn.delete':'🗑 Xoá lô',
+    'save.note':'Thay đổi sẽ được cập nhật vào hệ thống',
+    'toast.saved':'Đã lưu thay đổi thành công!',
+    // Table row buttons
+    'btn.detail':'Chi tiết','btn.edit':'Sửa',
+    'tem.no':'Không cần tem','tem.yes':'Có tem — cần kiểm tra',
+  },
+  zh: {
+    // Login left panel
+    'login.brand':'DCL BookingShip ERP v2.0',
+    'login.hero':'智能管理\n<em>出口物流</em>',
+    'login.sub':'专为物流行业定制的ERP系统 — 集成客服、调度、订舱、提单和海关，一体化管理平台。',
+    'login.stat1':'票 / 月','login.stat2':'合作车队','login.stat3':'目的港',
+    'login.feat1':'实时追踪集装箱 — 从仓库到港口',
+    'login.feat2':'统一管理船期、订舱、SI和提单',
+    'login.feat3':'中越双语客服与调度报表',
+    // Login right panel
+    'login.welcome':'欢迎回来',
+    'login.subtitle':'请登录以继续管理系统',
+    'login.userLabel':'用户名','login.userPh':'输入用户名...',
+    'login.passLabel':'密码','login.passPh':'输入密码...',
+    'login.remember':'记住登录状态','login.forgot':'忘记密码？',
+    'login.btn':'登录系统 →',
+    'login.divider':'按部门分配权限',
+    'login.copyright':'© 2025 DCL Trading — 内部系统',
+    // Roles
+    'role.cskh':'客服','role.dieuđo':'调度','role.booking':'订舱',
+    'role.bill':'提单','role.haiquan':'海关',
+    // Nav
+    'nav.sec.overview':'总览','nav.dashboard':'仪表盘',
+    'nav.sec.ops':'业务操作',
+    'nav.cskh':'客服 + 调度','nav.dieuXe':'车辆调度','nav.booking':'订舱',
+    'nav.bill':'提单 / SI','nav.haiquan':'海关申报',
+    'nav.sec.carriers':'承运车队','nav.sec.system':'系统管理',
+    'nav.chiphi':'额外费用','nav.phanquyen':'权限管理',
+    'user.role':'客服 · 调度',
+    // Topbar
+    'topbar.bc1':'业务操作','topbar.bc2':'客服 + 调度',
+    'topbar.date':'星期五，2026年03月13日',
+    // Stats
+    'stat1.label':'本月总票数','stat1.sub':'在管货物批次',
+    'stat2.label':'已装船','stat2.sub':'完成率',
+    'stat3.label':'运输中','stat3.sub':'箱在途中','stat3.warn':'3票即将截港',
+    'stat4.label':'待处理','stat4.sub':'今日需处理',
+    'stat5.label':'本月营收','stat5.sub':'VNĐ · 48箱 × ~4.37万',
+    // Pipeline
+    'pipe1':'接单','pipe2':'已订舱','pipe3':'箱到仓库',
+    'pipe4':'运输中','pipe5':'已到港','pipe6':'已装船','pipe7':'已结关',
+    // Toolbar
+    'toolbar.title':'客服 + 调度明细表',
+    'toolbar.searchPh':'搜索箱号、订舱号、客户名...',
+    'filter.allCustomers':'所有客户','filter.allCarriers':'所有车队','filter.allStatus':'所有状态',
+    'toolbar.addNew':'新增票',
+    // Table headers
+    'th.lo':'票号','th.booking':'订舱号','th.cont':'箱号','th.seal':'铅封号',
+    'th.khach':'客户名','th.cang':'目的港','th.nhaxe':'承运车队',
+    'th.ngaygoi':'提箱日期','th.cutoff':'截港时间',
+    'th.hang':'船公司','th.status':'状态','th.tem':'贴标','th.gia':'报价','th.action':'操作',
+    // Table footer
+    'table.footer':'显示 12 / 138 票 · 2026年03月',
+    // Status
+    's.done':'已装船出发','s.port':'已回港待装','s.packing':'正在装货',
+    's.plan':'待计划','s.contkho':'箱到仓库','s.cleared':'已结关','s.urgent':'⚠ 紧急处理',
+    // Detail panel
+    'dp.booking':'订舱号','dp.khach':'客户名称','dp.hang':'船公司','dp.tau':'船名航次',
+    'dp.nhaxe':'承运车队','dp.gia':'报价','dp.socont':'箱数',
+    'dp.progress':'进度',
+    'tl.nhandon':'接单','tl.contkho':'箱到仓库','tl.kiemdich':'检疫完成',
+    'tl.hacang':'已进港猫莱','tl.today':'03月13日 — 今天',
+    'tl.lentau':'装船 (ETD)','tl.dencang':'到达目的港',
+    'dp.editBtn':'编辑此票','dp.eport':'查看ePort',
+    // Modal tabs
+    'mtab1':'基本信息','mtab2':'集装箱','mtab3':'调度信息','mtab4':'提单 / SI','mtab5':'海关申报',
+    'modal.title.edit':'详情与编辑订舱','modal.title.new':'新增货物批次',
+    // Timeline in modal
+    'tls1':'接单','tls2':'订舱','tls3':'箱到仓','tls4':'检疫','tls5':'进港','tls6':'装船','tls7':'结关',
+    // Form sections
+    'sec.donhang':'订单信息','sec.khach':'客户与仓库信息',
+    'sec.lichhang':'船期与港口','sec.nhaxe':'承运车队与报价','sec.ghichu':'内部备注',
+    // Form labels
+    'lbl.malo':'内部票号','lbl.sobooking':'订舱号','lbl.trangthai':'状态',
+    'lbl.khachvn':'客户名称（越文）','lbl.khachcn':'客户名称（中文）',
+    'lbl.diademhang':'装货地点 / 仓库','lbl.lienhe':'仓库联系人',
+    'lbl.pod':'目的港 (POD)','lbl.hangtau':'船公司','lbl.tentau':'船名 / 航次',
+    'lbl.ngaygoi':'提箱日期','lbl.etd':'预计开船日 (ETD)',
+    'lbl.eta':'预计到港日 (ETA)','lbl.cutoff':'截港时间','lbl.etdkho':'客户预计开船日',
+    'lbl.nhaxe':'承运车队','lbl.gia':'报价 (VNĐ)','lbl.cskh':'负责客服',
+    'lbl.note':'备注 / 内部注记','lbl.tem':'是否需要贴标签',
+    // Containers
+    'sec.contlist':'该票集装箱列表',
+    'ch.cont':'箱号','ch.seal':'铅封号','ch.contstatus':'箱状态',
+    'cs.empty':'未满','cs.full':'已满箱','cs.packing':'正在装货','cs.port':'已进港','cs.ship':'已装船',
+    'sec.eport':'ePort申报信息',
+    'lbl.ngayeport':'ePort申报日期','lbl.eportstatus':'ePort状态',
+    'lbl.maha':'港区放行编号','lbl.ngaythanhlý':'结关日期',
+    'btn.addcont':'添加集装箱',
+    'ep.pending':'未申报','ep.done':'已申报','ep.cleared':'已结关',
+    // Dieu do
+    'sec.kehoach':'调度计划',
+    'lbl.ngaybao':'通知车队日期','lbl.ngaycont':'箱到仓库日期',
+    'lbl.ngayday':'装满预计日期','lbl.ngayvao':'进兴盛仓日期',
+    'lbl.ngayra':'出兴盛仓日期','lbl.ngayha':'进港日期',
+    'sec.chiphi':'调度费用',
+    'lbl.kehoach':'车架计划',
+    'kh.1':'换空箱 还重','kh.2':'新车架 新车架','kh.3':'还车架 还车架','kh.4':'取消车架 还车架',
+    'lbl.luumooc':'留拖架（天）','lbl.phimooc':'拖架留置费 (VNĐ)',
+    'lbl.cuonmooc':'拖架卷回费 (VNĐ)','lbl.dieudc':'负责调度','lbl.det':'DET（免费天数）',
+    'lbl.ghichudd':'调度备注','ph.ghichudd':'填写调度备注、特殊情况...',
+    // Bill
+    'sec.shipper':'发货人 / 收货人信息',
+    'lbl.shipper':'发货人 (Shipper)','lbl.cnee':'收货人 (CNEE)','lbl.notify':'通知方 (Notify)',
+    'lbl.commodity':'货物描述 (Commodity)',
+    'sec.billstatus':'SI / 提单状态',
+    'lbl.deadlineSI':'SI截止日期','lbl.ngaysi':'SI提交日期',
+    'lbl.draftbl':'草提单状态','lbl.loaibill':'提单类型','lbl.sobl':'提单号 (MBL/HBL)','lbl.ptbill':'提单负责人',
+    'bl.pending':'未收到草提单','bl.draft':'已收到草提单','bl.confirmed':'已确认草提单','bl.released':'已放单',
+    'sec.payment':'付款信息',
+    'lbl.cuoc':'海运费 (VNĐ)','lbl.local':'本地费用 (VNĐ)',
+    'lbl.phiphatsinh':'额外费用','ph.phiphatsinh':'改单费、DEM/DET...',
+    'lbl.ttoan':'付款状态','lbl.linkbill':'提单文件链接 (Google Drive)','ph.linkbill':'粘贴Drive链接...',
+    'pay.pending':'未付款','pay.done':'已付款',
+    // Haiquan
+    'sec.kiemdich':'植物检疫 (Phyto)',
+    'lbl.ngaylam':'检疫准备日期','lbl.ngaykd':'检疫完成日期','lbl.ttkd':'Phyto状态',
+    'lbl.sophyto':'检疫证书编号','lbl.soco':'C/O编号','lbl.formco':'C/O版本',
+    'kd.pending':'等待检疫','kd.pass':'已检疫 — 通过','kd.fail':'未通过 — 需重新处理',
+    'co.forme':'Form E（东盟–中国）',
+    'sec.tokhaikhai':'报关单',
+    'lbl.sotk':'报关单号','lbl.ngaykb':'申报日期','lbl.phanluong':'查验通道',
+    'lbl.tttk':'报关单状态','lbl.linkhq':'报关 / CO / Phyto文件链接','ph.linkhq':'链接Google Sheet...',
+    'lbl.pthq':'负责海关','lbl.ghichuhq':'海关备注','ph.ghichuhq':'填写检疫、CO、报关备注...',
+    'pl.green':'绿色通道 (Green)','pl.yellow':'黄色通道 (Yellow)','pl.red':'红色通道 (Red)',
+    'tk.pending':'等待传输','tk.cleared':'已通关','tk.checking':'检查中',
+    // Footer / Buttons
+    'btn.save':'保存更改','btn.cancel':'取消','btn.delete':'🗑 删除此票',
+    'save.note':'更改将更新到系统',
+    'toast.saved':'保存成功！',
+    // Table row buttons
+    'btn.detail':'详情','btn.edit':'编辑',
+    'tem.no':'无需贴标','tem.yes':'需要贴标 — 请检查',
+  }
+};
+
+let currentLang = 'vi';
+
+function t(key) {
+  return i18n[currentLang][key] || i18n['vi'][key] || key;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  // Update all switcher buttons
+  ['login-btn-vi','right-btn-vi','dash-btn-vi'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', lang==='vi');
+  });
+  ['login-btn-zh','right-btn-zh','dash-btn-zh'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', lang==='zh');
+  });
+  applyLang();
+  renderTable(); // re-render table with new language
+}
+
+function applyLang() {
+  // Text content
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = t(key);
+    if (val) {
+      // For hero title allow innerHTML with <em>
+      if (el.tagName === 'H1' && val.includes('<em>')) {
+        el.innerHTML = val.replace(/\n/g,'<br/>');
+      } else {
+        el.textContent = val;
+      }
+    }
+  });
+  // Placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    const val = t(key);
+    if (val) el.placeholder = val;
+  });
+  // Update side panel label
+  document.getElementById('side-lo-title').textContent =
+    (currentLang==='zh' ? '详情 — 票 ' : 'Chi tiết — Lô ') + currentSelectedLo;
+}
+
+// ══════════════════════════════════════
+//  DATA & TABLE
+// ══════════════════════════════════════
+const tableData = [
+  { lo:'217', booking:'JJCTHSHY600159', cont:'FBIU5164010', seal:'SJJB713066', khach:'Bình Phước 平福 KHO 1', cang:'SHA', nhaxe:'TTK', ngaygoi:'06/03', etd:'19/03', cutoff:'18/03 19:00', hang:'SJJ', status:'packing', tem:false, gia:'43tr', isGroup:true },
+  { lo:'',    booking:'JJCTHSHY600159', cont:'FBIU5683000', seal:'SJJC678710', khach:'Bình Phước 平福 KHO 1', cang:'SHA', nhaxe:'TTK', ngaygoi:'06/03', etd:'19/03', cutoff:'18/03 19:00', hang:'SJJ', status:'packing', tem:false, gia:'48tr', isGroup:false },
+  { lo:'',    booking:'JJCTHSHY600159', cont:'FBIU5596122', seal:'SJJC678692', khach:'HENG XING 恒兴', cang:'SHA', nhaxe:'VT LSG', ngaygoi:'11/03', etd:'19/03', cutoff:'18/03 19:00', hang:'SJJ', status:'packing', tem:false, gia:'45tr', isGroup:false },
+  { lo:'218', booking:'A59GX07442',     cont:'SZLU9596423', seal:'IAAH674738', khach:'JIN FU JIE 金富杰 KHO 1', cang:'XIA', nhaxe:'VT LSG', ngaygoi:'09/03', etd:'14/03', cutoff:'13/03 13:00', hang:'IAL', status:'port', tem:false, gia:'41tr', isGroup:true },
+  { lo:'',    booking:'A59GX07442',     cont:'FBIU5553687', seal:'IAAH688050', khach:'JIN FU JIE 金富杰 KHO 3', cang:'XIA', nhaxe:'VT LSG', ngaygoi:'09/03', etd:'14/03', cutoff:'13/03 13:00', hang:'IAL', status:'port', tem:true, gia:'42tr', isGroup:false },
+  { lo:'219A',booking:'ASC0507289',     cont:'CGMU5355006', seal:'M0983835',   khach:'JIN FU JIE 金富杰 KHO 5', cang:'SHA', nhaxe:'PT GLOBAL', ngaygoi:'09/03', etd:'16/03', cutoff:'15/03 13:00', hang:'CMA', status:'packing', tem:true, gia:'41tr', isGroup:true },
+  { lo:'',    booking:'ASC0507289',     cont:'SZLU9104333', seal:'M0983832',   khach:'JIN FU JIE 金富杰 KHO 1', cang:'SHA', nhaxe:'VT LSG', ngaygoi:'09/03', etd:'16/03', cutoff:'15/03 13:00', hang:'CMA', status:'packing', tem:false, gia:'41tr', isGroup:false },
+  { lo:'',    booking:'ASC0507289',     cont:'AMCU9352725', seal:'M3902215',   khach:'JIN FU JIE 金富杰 KHO 1', cang:'SHA', nhaxe:'VT LSG', ngaygoi:'10/03', etd:'16/03', cutoff:'15/03 13:00', hang:'CMA', status:'plan', tem:false, gia:'43tr', isGroup:false },
+  { lo:'220', booking:'YMJAI490581148', cont:'YMLU5528545', seal:'YMAU980907', khach:'HENG XING 恒兴 Thu Vân', cang:'DAL', nhaxe:'VT LSG', ngaygoi:'11/03', etd:'20/03', cutoff:'19/03 08:00', hang:'YML', status:'packing', tem:false, gia:'47tr', isGroup:true },
+  { lo:'221', booking:'JJCTHSHY600158', cont:'FBIU5683530', seal:'SJJC678688', khach:'Bình Phước 平福 KHO 5', cang:'SHA', nhaxe:'TTK', ngaygoi:'11/03', etd:'19/03', cutoff:'18/03 19:00', hang:'SJJ', status:'plan', tem:false, gia:'48tr', isGroup:true },
+  { lo:'222', booking:'SITSGTXR488517', cont:'— chưa cấp', seal:'—', khach:'JIN FU JIE Tây Ninh', cang:'TJN', nhaxe:'—', ngaygoi:'12/03', etd:'19/03', cutoff:'⚠ 18/03', hang:'—', status:'delay', tem:true, gia:'48tr', isGroup:true },
+  { lo:'223', booking:'2322398440',     cont:'— đang chờ', seal:'—', khach:'HENG XING Trảng Bom', cang:'DAL', nhaxe:'—', ngaygoi:'13/03', etd:'—', cutoff:'—', hang:'—', status:'plan', tem:false, gia:'—', isGroup:true },
+];
+const statusKeys = { done:'s.done', port:'s.port', packing:'s.packing', plan:'s.plan', delay:'s.urgent' };
+const statusCls  = { done:'s-done', port:'s-port', packing:'s-packing', plan:'s-plan', delay:'s-delay' };
+const nhaxeMap   = { 'TTK':'nxe-ttk','LINKLUCK':'nxe-ll','VT LSG':'nxe-vtl','PT GLOBAL':'nxe-pt' };
+
+let currentSelectedLo = '218';
+
+function renderTable() {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = '';
+  tableData.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.className = r.isGroup ? 'group-row' : 'sub-row';
+    const sKey = statusKeys[r.status] || 's.plan';
+    const sCls = statusCls[r.status] || 's-plan';
+    const nxCls = nhaxeMap[r.nhaxe] || 'nxe-ttk';
+    if (r.status==='delay') tr.style.background='#fff8f0';
+    if (r.lo===currentSelectedLo && r.lo) tr.classList.add('selected');
+
+    const loBadge = r.lo
+      ? `<span class="lo-badge" style="${r.status==='delay'?'color:#c53030':''}">${r.lo}</span>`
+      : `<span style="color:#aaa;padding-left:16px">↳</span>`;
+    const nxBadge = r.nhaxe!=='—'
+      ? `<span class="nxe ${nxCls}">${r.nhaxe}</span>`
+      : '<span style="color:#aaa">—</span>';
+    const cutoffHtml = r.status==='delay'
+      ? `<span style="color:#c53030;font-weight:700">⚠ ${r.cutoff}</span>`
+      : (r.cutoff.includes('18/03')||r.cutoff.includes('19/03'))
+        ? `<span class="today-chip">${r.cutoff}</span>`
+        : r.cutoff;
+    const temHtml = r.tem
+      ? `<span class="tem-yes">✓ ${currentLang==='zh'?'贴标':'TEM'}</span>`
+      : '<span class="tem-no">—</span>';
+
+    tr.innerHTML = `
+      <td>${loBadge}</td>
+      <td class="mono">${r.booking}</td>
+      <td class="mono">${r.cont}</td>
+      <td class="mono" style="color:#8898aa">${r.seal}</td>
+      <td>${r.khach}</td>
+      <td><span class="port">${r.cang}</span></td>
+      <td>${nxBadge}</td>
+      <td>${r.ngaygoi}</td>
+      <td>${r.etd}</td>
+      <td>${cutoffHtml}</td>
+      <td>${r.hang}</td>
+      <td><span class="badge-status ${sCls}"><span class="dot"></span>${t(sKey)}</span></td>
+      <td>${temHtml}</td>
+      <td>${r.gia}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-xs primary" onclick="openModal('${r.lo||r.booking}','edit');event.stopPropagation()">${t('btn.detail')}</button>
+          <button class="btn-xs" onclick="event.stopPropagation()">${t('btn.edit')}</button>
+        </div>
+      </td>`;
+
+    tr.addEventListener('click', () => {
+      document.querySelectorAll('#table-body tr').forEach(x=>x.classList.remove('selected'));
+      tr.classList.add('selected');
+      if (r.lo) { currentSelectedLo = r.lo; updateSidePanel(r); }
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function updateSidePanel(r) {
+  const prefix = currentLang==='zh' ? '详情 — 票 ' : 'Chi tiết — Lô ';
+  document.getElementById('side-lo-title').textContent = prefix + r.lo;
+  document.getElementById('sd-booking').textContent = r.booking;
+  document.getElementById('sd-khach').textContent = r.khach;
+  document.getElementById('sd-hang').textContent = r.hang;
+  document.getElementById('sd-nhaxe').textContent = r.nhaxe;
+  document.getElementById('sd-etd').textContent = r.etd;
+  document.getElementById('sd-gia').textContent = r.gia + ' VNĐ';
+  const conts = tableData.filter(x=>x.booking===r.booking);
+  document.getElementById('sd-socont').textContent = conts.length + ' × 40HR';
+}
+
+// ══════════════════════════════════════
+//  PAGE SWITCH
+// ══════════════════════════════════════
+function goToDashboard() {
+  document.getElementById('page-login').classList.remove('active');
+  document.getElementById('page-dashboard').classList.add('active');
+  renderTable();
+  applyLang();
+}
+
+// ══════════════════════════════════════
+//  PIPELINE
+// ══════════════════════════════════════
+function setPipe(el) {
+  document.querySelectorAll('.pipe-step').forEach(e=>e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ══════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════
+function openModal(loId, mode) {
+  const modal = document.getElementById('booking-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const loLabel = currentLang==='zh' ? '票 ' : 'Lô ';
+  if (mode==='new') {
+    document.getElementById('modal-lo-badge').textContent = t('modal.title.new').split(' ')[0];
+    document.getElementById('modal-title').textContent = t('modal.title.new');
+    document.getElementById('modal-booking-num').textContent = 'Booking: —';
+  } else {
+    const found = tableData.find(r=>r.lo===loId||r.booking===loId);
+    const lo = found ? (found.lo||loId) : loId;
+    document.getElementById('modal-lo-badge').textContent = loLabel + lo;
+    document.getElementById('modal-title').textContent = t('modal.title.edit');
+    document.getElementById('modal-booking-num').textContent = 'Booking: ' + (found ? found.booking : loId);
+  }
+  applyLang();
+  switchTab(document.querySelector('.mtab'), 'tab-general');
+}
+
+function closeModal() {
+  document.getElementById('booking-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('booking-modal').addEventListener('click', function(e) {
+  if (e.target===this) closeModal();
+});
+
+function switchTab(el, tabId) {
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.modal-panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+// ══════════════════════════════════════
+//  CONTAINERS
+// ══════════════════════════════════════
+function addCont() {
+  const list = document.getElementById('cont-list');
+  const div = document.createElement('div');
+  div.className = 'cont-row';
+  div.innerHTML = `
+    <div class="form-group" style="margin:0"><input placeholder="XXXX0000000"/></div>
+    <div class="form-group" style="margin:0"><input placeholder="${currentLang==='zh'?'铅封号...':'Số seal...'}"/></div>
+    <div class="form-group" style="margin:0">
+      <select>
+        <option>${t('cs.empty')}</option>
+        <option>${t('cs.full')}</option>
+        <option>${t('cs.packing')}</option>
+        <option>${t('cs.port')}</option>
+        <option>${t('cs.ship')}</option>
+      </select>
+    </div>
+    <button class="btn-del-cont" onclick="delCont(this)">✕</button>`;
+  list.appendChild(div);
+}
+function delCont(btn) {
+  if (document.querySelectorAll('#cont-list .cont-row').length > 1)
+    btn.closest('.cont-row').remove();
+}
+
+// ══════════════════════════════════════
+//  SAVE
+// ══════════════════════════════════════
+function saveModal() {
+  closeModal();
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════
+//  KEYBOARD
+// ══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeModal();
+  if (e.key==='Enter' && document.getElementById('page-login').classList.contains('active')) goToDashboard();
+});
+
+// Init
+applyLang();
+</script>
+</body>
+</html>
