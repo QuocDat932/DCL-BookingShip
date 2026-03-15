@@ -13,6 +13,44 @@ let editingLotId = null;
 let pipeFilter = null;
 
 // ══════════════════════════════════════
+//  DATE CONVERSION HELPERS (dd/mm ↔ yyyy-mm-dd)
+// ══════════════════════════════════════
+function ddmmToDate(str) {
+  if (!str || str === '—') return '';
+  const m = str.match(/^(\d{1,2})\/(\d{1,2})$/);
+  if (!m) return '';
+  const year = new Date().getFullYear();
+  return `${year}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+}
+function dateToDdmm(val) {
+  if (!val) return '';
+  const parts = val.split('-');
+  if (parts.length < 3) return val;
+  return `${parts[2]}/${parts[1]}`;
+}
+function cutoffToDatetime(str) {
+  if (!str || str === '—') return '';
+  const cleaned = str.replace(/⚠\s*/g, '');
+  const m = cleaned.match(/^(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{2})$/);
+  if (!m) {
+    const m2 = cleaned.match(/^(\d{1,2})\/(\d{1,2})$/);
+    if (m2) {
+      const year = new Date().getFullYear();
+      return `${year}-${m2[2].padStart(2,'0')}-${m2[1].padStart(2,'0')}T00:00`;
+    }
+    return '';
+  }
+  const year = new Date().getFullYear();
+  return `${year}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}T${m[3].padStart(2,'0')}:${m[4]}`;
+}
+function datetimeToCutoff(val) {
+  if (!val) return '';
+  const m = val.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  if (!m) return val;
+  return `${m[3]}/${m[2]} ${m[4]}:${m[5]}`;
+}
+
+// ══════════════════════════════════════
 //  DEFAULT DATA
 // ══════════════════════════════════════
 const DEFAULT_LOTS = [
@@ -461,11 +499,11 @@ function populateModal(lot) {
   v('f-cang', lot.cang);
   v('f-hang', lot.hang);
   v('f-tau', lot.tau);
-  v('f-ngay-goi', lot.ngaygoi);
-  v('f-etd', lot.etd);
-  v('f-eta', lot.eta);
-  v('f-cutoff', lot.cutoff);
-  v('f-etd-kho', lot.etdKho);
+  v('f-ngay-goi', ddmmToDate(lot.ngaygoi));
+  v('f-etd', ddmmToDate(lot.etd));
+  v('f-eta', ddmmToDate(lot.eta));
+  v('f-cutoff', cutoffToDatetime(lot.cutoff));
+  v('f-etd-kho', ddmmToDate(lot.etdKho));
   v('f-nhaxe', lot.nhaxe);
   v('f-gia', lot.gia);
   v('f-cskh', lot.cskh);
@@ -568,11 +606,11 @@ function collectModalData() {
     cang: v('f-cang'),
     hang: v('f-hang'),
     tau: v('f-tau'),
-    ngaygoi: v('f-ngay-goi'),
-    etd: v('f-etd'),
-    eta: v('f-eta'),
-    cutoff: v('f-cutoff'),
-    etdKho: v('f-etd-kho'),
+    ngaygoi: dateToDdmm(v('f-ngay-goi')),
+    etd: dateToDdmm(v('f-etd')),
+    eta: dateToDdmm(v('f-eta')),
+    cutoff: datetimeToCutoff(v('f-cutoff')),
+    etdKho: dateToDdmm(v('f-etd-kho')),
     nhaxe: v('f-nhaxe'),
     gia: v('f-gia'),
     tem: v('f-tem') === '1',
