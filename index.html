@@ -311,18 +311,18 @@
         </div>
         <div class="form-section-title" data-i18n="sec.lichhang">Lịch tàu & Cảng</div>
         <div class="form-grid-3">
-          <div class="form-group"><label data-i18n="lbl.pod">Cảng đến (POD)</label><input id="f-cang" placeholder="SHA / XIA / DAL / TJN"/></div>
-          <div class="form-group"><label data-i18n="lbl.hangtau">Hãng tàu</label><input id="f-hang" placeholder="IAL / SJJ / CMA / YML"/></div>
-          <div class="form-group"><label data-i18n="lbl.tentau">Tên tàu / Chuyến</label><input id="f-tau"/></div>
+          <div class="form-group"><label data-i18n="lbl.pod">Cảng đến (POD)</label><select id="f-cang" onchange="onPortChange()"><option value="">— Chọn cảng đến —</option></select></div>
+          <div class="form-group"><label data-i18n="lbl.hangtau">Hãng tàu</label><input id="f-hang" readonly style="background:#f0f3f7;cursor:not-allowed" placeholder="Tự động điền khi chọn tàu"/></div>
+          <div class="form-group"><label data-i18n="lbl.tentau">Tên tàu / Chuyến</label><select id="f-tau" onchange="onVesselChange()"><option value="">— Chọn tàu —</option></select></div>
           <div class="form-group"><label data-i18n="lbl.ngaygoi">Ngày gọi cont</label><input type="date" id="f-ngay-goi"/></div>
-          <div class="form-group"><label data-i18n="lbl.etd">ETD dự kiến</label><input type="date" id="f-etd"/></div>
-          <div class="form-group"><label data-i18n="lbl.eta">ETA dự kiến</label><input type="date" id="f-eta"/></div>
+          <div class="form-group"><label data-i18n="lbl.etd">ETD dự kiến</label><input type="date" id="f-etd" title="Tự động điền khi chọn tàu, có thể sửa tay"/></div>
+          <div class="form-group"><label data-i18n="lbl.eta">ETA dự kiến</label><input type="date" id="f-eta" title="Tự động điền khi chọn tàu, có thể sửa tay"/></div>
           <div class="form-group"><label data-i18n="lbl.cutoff">Cut-off time</label><input type="datetime-local" id="f-cutoff"/></div>
           <div class="form-group"><label data-i18n="lbl.etdkho">ETD dự kiến kho</label><input type="date" id="f-etd-kho"/></div>
         </div>
         <div class="form-section-title" data-i18n="sec.nhaxe">Nhà xe & Giá</div>
         <div class="form-grid-3">
-          <div class="form-group"><label data-i18n="lbl.nhaxe">Nhà xe vận chuyển</label><input id="f-nhaxe" placeholder="TTK / LINKLUCK / VT LSG / PT GLOBAL"/></div>
+          <div class="form-group"><label data-i18n="lbl.nhaxe">Nhà xe vận chuyển</label><input id="f-nhaxe" readonly style="background:#f0f3f7;cursor:not-allowed" placeholder="Tự động từ tab Điều độ" title="Chỉnh ở tab Điều độ — mỗi cont có thể khác nhà xe"/></div>
           <div class="form-group"><label data-i18n="lbl.gia">Giá báo (VNĐ)</label><input id="f-gia" placeholder="41,000,000"/></div>
           <div class="form-group"><label data-i18n="lbl.cskh">CSKH phụ trách</label>
             <select id="f-cskh"><option value="THANH">THANH</option><option value="PHONG">PHONG</option><option value="AN">AN</option></select>
@@ -357,29 +357,28 @@
         </div>
       </div>
 
-      <!-- TAB 3: Dieu do -->
+      <!-- TAB 3: Dieu do (per-container dispatch) -->
       <div id="tab-dieudo" class="modal-panel">
-        <div class="form-section-title" data-i18n="sec.kehoach">Kế hoạch điều độ</div>
+        <!-- Lot-level fields -->
+        <div class="form-section-title">Thông tin chung điều độ</div>
         <div class="form-grid-3">
           <div class="form-group"><label data-i18n="lbl.ngaybao">Ngày báo kế hoạch trucking</label><input type="date" id="f-ngay-bao"/></div>
-          <div class="form-group"><label data-i18n="lbl.ngaycont">Ngày cont đến kho</label><input type="date" id="f-ngay-cont"/></div>
-          <div class="form-group"><label data-i18n="lbl.ngayday">Ngày đầy cont dự kiến</label><input type="date" id="f-ngay-day"/></div>
-          <div class="form-group"><label data-i18n="lbl.ngayvao">Ngày vào Hưng Thịnh</label><input type="date" id="f-ngay-vao"/></div>
-          <div class="form-group"><label data-i18n="lbl.ngayra">Ngày ra Hưng Thịnh</label><input type="date" id="f-ngay-ra"/></div>
-          <div class="form-group"><label data-i18n="lbl.ngayha">Ngày hạ cảng</label><input type="date" id="f-ngay-ha"/></div>
-        </div>
-        <div class="form-section-title" data-i18n="sec.chiphi">Chi phí điều độ</div>
-        <div class="form-grid-3">
-          <div class="form-group"><label data-i18n="lbl.kehoach">Kế hoạch nhà xe</label>
-            <select id="f-kehoach"><option value="0" data-i18n="kh.1">ĐỔI RỖNG 还重</option><option value="1" data-i18n="kh.2">CẮT MOOC MỚI 新车架</option><option value="2" data-i18n="kh.3">CUỐN MOOC 还车架</option><option value="3" data-i18n="kh.4">RÚT MOOC 还车架</option></select>
-          </div>
-          <div class="form-group"><label data-i18n="lbl.luumooc">Lưu mooc (ngày)</label><input type="number" id="f-luu-mooc" value="0" min="0"/></div>
-          <div class="form-group"><label data-i18n="lbl.phimooc">Phí lưu mooc (VNĐ)</label><input id="f-phi-mooc"/></div>
-          <div class="form-group"><label data-i18n="lbl.cuonmooc">Chi phí cuốn mooc (VNĐ)</label><input id="f-cuon-mooc"/></div>
           <div class="form-group"><label data-i18n="lbl.dieudc">Điều độ phụ trách</label><select id="f-dieu-do"><option value="PHONG">PHONG</option><option value="AN">AN</option><option value="THANH">THANH</option></select></div>
           <div class="form-group"><label data-i18n="lbl.det">DET (ngày free)</label><input type="number" id="f-det" value="14" min="0"/></div>
         </div>
-        <div class="form-group"><label data-i18n="lbl.ghichudd">Ghi chú điều độ</label><textarea id="f-ghi-chu-dd" data-i18n-ph="ph.ghichudd" placeholder="Ghi chú về lịch trình, sự cố..."></textarea></div>
+
+        <!-- Per-container dispatch cards -->
+        <div class="form-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Điều độ theo từng Container</span>
+          <button type="button" class="btn-outline-dcl" style="padding:4px 12px;font-size:.72rem;text-transform:none;letter-spacing:0" onclick="applyFirstDispatchToAll()">📋 Áp dụng cont 1 cho tất cả</button>
+        </div>
+        <div id="dispatch-list"></div>
+
+        <!-- Lot-level note -->
+        <div class="form-group" style="margin-top:16px"><label data-i18n="lbl.ghichudd">Ghi chú điều độ chung</label><textarea id="f-ghi-chu-dd" data-i18n-ph="ph.ghichudd" placeholder="Ghi chú về lịch trình, sự cố..."></textarea></div>
+
+        <!-- Lot-level cost summary -->
+        <div id="cost-summary-wrapper"></div>
       </div>
 
       <!-- TAB 4: Bill / SI -->

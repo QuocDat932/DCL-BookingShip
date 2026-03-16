@@ -268,6 +268,55 @@ table.dcl-table tr.sub-row td:first-child{padding-left:28px;color:#aab}
 .btn-delete:hover{background:#fee2e2}
 .save-note{font-size:.75rem;color:#8898aa}
 
+/* ─── DISPATCH CARD (per-container) ─── */
+.dispatch-card{background:#f7f9fc;border:1px solid #e0e7f0;border-radius:10px;padding:14px 16px;margin-bottom:12px;position:relative}
+.dispatch-card .dc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e8eef6;cursor:pointer;user-select:none}
+.dispatch-card .dc-header .dc-cont-badge{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;color:var(--navy);background:#e0e7f0;padding:2px 10px;border-radius:6px}
+.dispatch-card .dc-header .dc-cont-num{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:600;color:var(--slate);letter-spacing:.03em}
+.dispatch-card .dc-header .dc-nhaxe-tag{margin-left:auto;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:4px;background:#e6eefa;color:var(--navy)}
+.dispatch-card .dc-header .dc-toggle{color:#8898aa;font-size:.75rem;transition:transform .2s}
+.dispatch-card.collapsed .dc-body{display:none}
+.dispatch-card.collapsed .dc-toggle{transform:rotate(-90deg)}
+.dispatch-card .dc-body{animation:fadeIn .15s ease}
+
+/* ─── DISPATCH SECTION TITLES ─── */
+.dc-section-title{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin:14px 0 8px;padding-bottom:4px;border-bottom:1.5px solid #d0d8e8;display:flex;align-items:center;gap:6px}
+.dc-section-title:first-child{margin-top:0}
+
+/* ─── HUNG THINH SECTION ─── */
+.ht-section{background:#fffde7;border:1px solid #ffe082;border-radius:8px;padding:12px 14px;margin:8px 0 12px;display:none}
+.ht-section.visible{display:block;animation:fadeIn .15s ease}
+.ht-cost-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:8px}
+.ht-cost-table th{background:#fff8e1;padding:6px 8px;font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7a4a00;border-bottom:1px solid #ffe082;text-align:left}
+.ht-cost-table td{padding:5px 8px;border-bottom:1px solid #fff3c4;vertical-align:middle}
+.ht-cost-table td input{width:100%;border:1px solid #ffe082;border-radius:4px;padding:3px 6px;font-size:.78rem;background:#fff;font-family:'Barlow',sans-serif}
+.ht-cost-table tr.ht-subtotal td,.ht-cost-table tr.ht-total td{font-weight:700;background:#fff8e1;color:var(--navy)}
+.ht-cost-table .ht-auto-val,.ht-cost-table .ht-fixed-auto-val{color:var(--slate);font-weight:600;font-size:.78rem;white-space:nowrap}
+
+/* ─── DATE WARNINGS ─── */
+.date-warning{color:#c53030;font-size:.75rem;font-weight:500;margin-top:6px;padding:8px 12px;background:#fff5f5;border-radius:6px;border-left:4px solid var(--red);display:none;line-height:1.5}
+.date-warning.visible{display:block;animation:fadeIn .15s ease}
+.date-warning b{font-weight:700}
+
+/* ─── COST SUMMARY TABLE (lot-level) ─── */
+.cost-summary-section{margin-top:24px;background:linear-gradient(135deg,#fafbfe,#f5f7fc);border:2px solid #d0d8e8;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(30,45,74,.06)}
+.cost-summary-section .cs-title{font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid var(--navy)}
+.cost-summary-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.cost-summary-table th{background:var(--navy);color:#fff;padding:10px 12px;font-size:.67rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-bottom:none}
+.cost-summary-table th:first-child{border-radius:6px 0 0 0}
+.cost-summary-table th:last-child{border-radius:0 6px 0 0}
+.cost-summary-table td{padding:10px 12px;border-bottom:1px solid #e8eef6;vertical-align:top;line-height:1.6}
+.cost-summary-table tr:hover td{background:rgba(58,80,128,.03)}
+.cost-summary-table tr.cs-grand-total td{font-weight:700;background:linear-gradient(135deg,#1E2D4A,#3A5080);color:#fff;font-size:.88rem;border-top:2px solid var(--navy);padding:12px}
+.cost-summary-table tr.cs-grand-total .cs-amount{color:#FFD700;font-size:1.1rem}
+.cost-summary-table .cs-vendor-name{font-weight:600;color:var(--navy);white-space:nowrap;min-width:140px}
+.cost-summary-table .cs-amount{text-align:right;font-weight:600;color:var(--navy);font-family:'Barlow Condensed',sans-serif;font-size:.85rem;white-space:nowrap}
+
+/* ─── DISPATCH HELPER TEXTS ─── */
+.dc-hint{font-size:.67rem;color:#8898aa;margin-top:2px;font-style:italic}
+.dc-calc-hint{font-size:.67rem;color:var(--green);margin-top:2px;font-weight:600}
+.dc-auto-badge{display:inline-block;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:10px;background:#e6f4ea;color:#256029;margin-left:4px;vertical-align:middle}
+
 /* ─── TOAST ─── */
 .toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 24px;border-radius:30px;font-size:.85rem;font-weight:600;opacity:0;transition:all .3s;z-index:2000;pointer-events:none;display:flex;align-items:center;gap:8px}
 .toast-msg.show{opacity:1;transform:translateX(-50%) translateY(0)}
