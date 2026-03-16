@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -c app.js)",
+      "Bash(node -e \"const css = require\\(''fs''\\).readFileSync\\(''styles.css'',''utf8''\\); console.log\\(''CSS lines:'', css.split\\(''\\\\n''\\).length\\); console.log\\(''CSS OK''\\);\")"
+    ]
+  }
+}
